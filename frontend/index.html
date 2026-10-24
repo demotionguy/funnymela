@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="hi"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>FunnyMela 🎡</title>
+<style>
+:root{--pn:rgba(255,248,230,.92);--tx:#3a1f0b;--ac:#e8590c;--ac2:#ffd43b;box-sizing:border-box}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--pn:rgba(40,22,70,.92);--tx:#ffeccc;--ac:#ff922b}}
+:root[data-theme="dark"]{--pn:rgba(40,22,70,.92);--tx:#ffeccc;--ac:#ff922b}
+*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#2b1a55;font-family:system-ui,-apple-system,"Noto Sans Devanagari",sans-serif;color:var(--tx);touch-action:none;user-select:none}
+canvas{position:fixed;inset:0;width:100%;height:100%;touch-action:none}
+.b{border:0;border-radius:22px;padding:10px 16px;font-weight:700;font-size:15px;background:var(--ac2);color:#3a1f0b;box-shadow:0 2px 6px rgba(0,0,0,.4)}
+.pn{background:var(--pn);border-radius:14px;padding:8px 12px;font-weight:700}
+#hud{display:none}
+#top{position:fixed;left:10px;top:calc(10px + env(safe-area-inset-top,0px));max-width:55vw}
+#tr{position:fixed;right:10px;top:calc(10px + env(safe-area-inset-top,0px));display:flex;gap:6px}
+#tr .b{padding:8px 11px}
+#joy{position:fixed;left:18px;bottom:calc(24px + env(safe-area-inset-bottom,0px));width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.22);border:2px solid rgba(255,255,255,.5)}
+#knob{position:absolute;left:35px;top:35px;width:50px;height:50px;border-radius:50%;background:rgba(255,255,255,.75)}
+#act{position:fixed;right:16px;bottom:calc(40px + env(safe-area-inset-bottom,0px));display:none;background:var(--ac);color:#fff;padding:16px 20px;font-size:16px}
+#start,#shop{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:16px;z-index:10}
+#start{background:linear-gradient(160deg,#d9480f,#5f1d78);color:#fff;flex-direction:column;text-align:center;overflow:auto}
+#start h1{font-size:34px;margin:6px}
+.set{background:rgba(0,0,0,.28);border-radius:16px;padding:12px 16px;display:grid;grid-template-columns:auto auto;gap:8px 14px;text-align:left;align-items:center;margin:12px 0}
+select{font-size:15px;padding:6px;border-radius:8px;border:0}
+#shop{display:none;background:rgba(0,0,0,.55);z-index:12}
+#shop .bx{background:var(--pn);width:100%;max-width:460px;border-radius:20px;padding:16px;max-height:90vh;overflow:auto}
+.it{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(128,128,128,.3)}
+.it b{flex:1}.ie{font-size:30px}
+#toast{position:fixed;top:calc(64px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);background:#2b8a3e;color:#fff;padding:8px 16px;border-radius:20px;z-index:30;display:none;font-weight:700}
+#ad{position:fixed;left:0;right:0;bottom:0;height:50px;background:var(--pn);display:none;align-items:center;justify-content:center;font-size:13px;font-weight:700;z-index:4;border-top:2px solid var(--ac);overflow:hidden}
+body.ads #joy{bottom:calc(76px + env(safe-area-inset-bottom,0px))}body.ads #act{bottom:calc(96px + env(safe-area-inset-bottom,0px))}
+@media (pointer:fine){#joy{display:none}}
+#hint{position:fixed;left:50%;transform:translateX(-50%);top:calc(62px + env(safe-area-inset-top,0px));font-size:12px;color:#fff;text-shadow:0 1px 3px #000;text-align:center;pointer-events:none;width:92vw}
+#adv{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;padding:16px}
+#adv .bx{background:var(--pn);border-radius:20px;padding:22px;text-align:center;max-width:340px;width:100%}
+#adm{position:fixed;inset:0;z-index:40;background:var(--pn);color:var(--tx);overflow:auto;padding:16px 14px calc(24px + env(safe-area-inset-bottom,0px));display:none;touch-action:pan-y;user-select:text}
+#adm h2{margin:16px 0 6px;font-size:16px}.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:8px}.card{background:rgba(128,128,128,.18);border-radius:12px;padding:10px;text-align:center;font-size:13px}.card b{display:block;font-size:24px;color:var(--ac)}
+#adm table{width:100%;border-collapse:collapse;font-size:13px}#adm td,#adm th{padding:5px;border-bottom:1px solid rgba(128,128,128,.3);text-align:left}
+#adm input,#adm select{font-size:14px;padding:6px;border-radius:8px;border:1px solid rgba(128,128,128,.5);background:transparent;color:inherit;margin:2px}#adm .b{margin:3px}
+#toast{z-index:50}#mm{position:fixed;right:10px;top:calc(118px + env(safe-area-inset-top,0px));width:110px;height:110px}
+#tr{flex-wrap:wrap;justify-content:flex-end;max-width:64vw}
+.ov{position:fixed;inset:0;z-index:22;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;padding:14px}
+.ov .bx{background:var(--pn);border-radius:20px;padding:16px;width:100%;max-width:460px;max-height:90vh;overflow:auto;text-align:center;touch-action:pan-y}
+#warn{position:fixed;top:calc(108px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);background:rgba(200,0,0,.88);color:#fff;padding:6px 12px;border-radius:14px;font-weight:700;display:none;z-index:6;white-space:nowrap}
+#bn{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(150px + env(safe-area-inset-bottom,0px));display:none;background:var(--ac);color:#fff}
+/* ---- UI v2 ---- */
+.b{background:linear-gradient(180deg,#ffe066,#ffa94d);color:#3a1f0b;border-radius:14px;box-shadow:0 3px 0 #c97b12,0 6px 12px rgba(0,0,0,.35);transition:transform .08s}
+.b:active{transform:translateY(2px);box-shadow:0 1px 0 #c97b12}
+#top{background:linear-gradient(90deg,#5f1d78,#d9480f);color:#fff;border-radius:22px;padding:6px 14px;box-shadow:0 3px 10px rgba(0,0,0,.4);font-size:16px;backdrop-filter:blur(6px)}
+#ms{position:fixed;left:10px;top:calc(54px + env(safe-area-inset-top,0px));max-width:56vw;font-size:12px;padding:6px 12px;border-radius:14px;background:rgba(20,10,40,.72);color:#ffe8a3;backdrop-filter:blur(6px)}
+#tr{flex-direction:column;flex-wrap:nowrap;gap:8px;max-width:none;align-items:flex-end}
+#tr .b{width:44px;height:44px;padding:0;border-radius:50%;font-size:20px;display:flex;align-items:center;justify-content:center}
+#tr #br,#tr #bf{width:auto;border-radius:22px;padding:0 12px;font-size:14px}
+#mm{left:10px;right:auto;top:calc(104px + env(safe-area-inset-top,0px));border-radius:50%;border:2px solid rgba(255,255,255,.5);box-shadow:0 3px 10px rgba(0,0,0,.4)}
+#act{font-size:17px;padding:16px 22px;box-shadow:0 0 0 4px rgba(255,255,255,.35),0 6px 16px rgba(0,0,0,.5)}
+#start h1{font-size:38px;text-shadow:0 0 18px #ffd43b,0 3px 0 #7c1d6f}
+.set{background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.2);border-radius:18px}
+.it{background:rgba(128,128,128,.14);border-radius:14px;padding:10px 12px;margin:6px 0;border-bottom:0}
+.ov .bx{border:2px solid var(--ac);box-shadow:0 10px 40px rgba(0,0,0,.5)}
+#toast{border-radius:16px;box-shadow:0 4px 14px rgba(0,0,0,.4)}
+.scene{position:fixed;inset:0;z-index:35;display:none;overflow:hidden;background:#000}
+.gbg{position:absolute;inset:0;background:radial-gradient(circle at 50% 40%,#3a1250,#000 70%);animation:flick 1.1s steps(2) infinite}
+@keyframes flick{0%{opacity:1}50%{opacity:.55}100%{opacity:.9}}
+.g1,.g2,.g3,.g4{position:absolute;opacity:0;font-size:40px}
+.g1{left:50%;top:42%;animation:gin 4s ease-in 1.5s forwards}
+.g2{left:15%;top:30%;animation:gfl 2.5s ease-in-out 3s infinite alternate}
+.g3{right:12%;top:20%;animation:gfl 1.2s ease-in-out 2s infinite alternate}
+.g4{left:60%;top:0;animation:spd 3s ease-in 2s forwards}
+@keyframes gin{0%{opacity:0;transform:translate(-50%,-50%) scale(.2)}30%{opacity:.7}100%{opacity:1;transform:translate(-50%,-50%) scale(9)}}
+@keyframes gfl{from{opacity:.9;transform:translateY(0) scale(2)}to{opacity:.9;transform:translateY(-30px) scale(3)}}
+@keyframes spd{0%{opacity:1;transform:translateY(0)}100%{opacity:1;transform:translateY(70vh) scale(3)}}
+.fl{position:absolute;inset:0;background:#fff;opacity:0;animation:fls .4s 4.5s 2}
+@keyframes fls{0%,100%{opacity:0}50%{opacity:.95}}
+.gt{position:absolute;bottom:12%;left:0;right:0;text-align:center;color:#ff6b6b;font-weight:800;font-size:20px;text-shadow:0 0 10px #f00}
+.mbg{position:absolute;inset:0;background:radial-gradient(circle at 50% 30%,#ffd43b,#e8590c 60%,#7c1d6f)}
+.mkm{position:absolute;left:50%;top:45%;font-size:130px;animation:dnc .45s ease-in-out infinite alternate;cursor:pointer}
+.mkm.flp{animation:flp .8s linear}
+@keyframes dnc{from{transform:translate(-50%,-50%) rotate(-14deg)}to{transform:translate(-50%,-70%) rotate(14deg)}}
+@keyframes flp{to{transform:translate(-50%,-50%) rotate(720deg) scale(1.3)}}
+.dmr{position:absolute;left:12%;top:65%;font-size:70px;animation:dnc .3s infinite alternate}
+.mad{position:absolute;right:12%;top:60%;font-size:80px;animation:dnc .6s infinite alternate}
+.stt{position:absolute;top:8%;left:0;right:0;text-align:center;color:#fff;font-weight:800;font-size:22px;text-shadow:0 2px 6px #000;z-index:2}
+.cfx{position:absolute;top:0;left:0;right:0;font-size:30px;text-align:center;animation:spd 3s linear infinite}
+.mbg2{position:absolute;inset:0;background:linear-gradient(135deg,#0b3954,#087e8b 50%,#c0e0de)}
+.mg{position:absolute;top:24%;left:50%;transform:translateX(-50%);display:grid;grid-template-columns:repeat(3,min(27vw,130px));gap:8px}
+.mc{height:min(27vw,130px);background:rgba(255,255,255,.35);border:3px solid #fff;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:56px;cursor:pointer;box-shadow:inset 0 0 20px #fff;overflow:hidden}
+.cl{position:absolute;top:calc(12px + env(safe-area-inset-top,0px));right:14px;z-index:3;background:#fff;color:#000;border-radius:50%;width:38px;height:38px;display:flex;align-items:center;justify-content:center;font-size:18px}
+
+/* ---- UI v3 (pro game UI) ---- */
+:root{--tb:112px}@media (min-width:700px){:root{--tb:70px}}
+#start{display:none!important}
+#ui{position:fixed;inset:0;z-index:7;pointer-events:none}#ui button,#ui #prof{pointer-events:auto}
+.gb{border:2px solid #fff3b0;border-radius:14px;background:linear-gradient(180deg,#ffe36a,#ff9d1c);color:#fff;font-weight:900;font-size:16px;padding:10px 18px;text-shadow:0 2px 0 #b35a00,0 0 6px #b35a00;box-shadow:0 4px 0 #b36300,0 8px 14px rgba(0,0,0,.45)}
+.gb:active{transform:translateY(3px);box-shadow:0 1px 0 #b36300}.gb.big{font-size:30px;padding:10px 34px;border-radius:18px}.gb.sm{font-size:13px;padding:6px 10px;margin:2px}.gb:disabled{filter:grayscale(.8);opacity:.7}
+#topbar{position:absolute;top:calc(8px + env(safe-area-inset-top,0px));left:8px;right:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;pointer-events:none}
+.pnlbar,#prof,#coin{background:linear-gradient(180deg,#2b3fd0,#1b1d82);border:3px solid #6bb2ff;color:#fff;box-shadow:0 3px 10px rgba(0,0,0,.45)}
+#prof{display:flex;gap:8px;align-items:center;padding:4px 14px 4px 4px;border-radius:30px;cursor:pointer}
+#pav{width:42px;height:42px;border-radius:50%;background:#fff;border:2px solid #ffd54a;font-size:26px;display:flex;align-items:center;justify-content:center}
+#pnm{font-weight:800;font-size:13px}.lv{font-size:11px;color:#bcd0ff}.xpb{height:6px;width:70px;border-radius:4px;background:#0b1450;overflow:hidden;margin-top:2px}.xpb i{display:block;height:100%;width:0;background:linear-gradient(90deg,#5be37a,#ffd54a)}
+#coin{display:flex;align-items:center;gap:6px;padding:4px 5px 4px 12px;border-radius:24px;font-weight:900;font-size:17px}#inv{display:none}
+#coin .plus{width:28px;height:28px;border-radius:50%;background:linear-gradient(180deg,#5be37a,#1ea54a);border:2px solid #fff;color:#fff;font-weight:900;font-size:19px;line-height:1;padding:0}
+#icons{margin-left:auto;display:flex;gap:6px;pointer-events:auto}
+.ico{min-width:38px;height:38px;border-radius:12px;border:2px solid #fff3b0;background:linear-gradient(180deg,#ffd54a,#ff9f1a);box-shadow:0 3px 0 #b36300;font-size:18px;font-weight:800;color:#3a1f0b;padding:0 8px}
+.ico.wide{background:linear-gradient(180deg,#ff8a5b,#e03131);color:#fff;font-size:12px;border-color:#fff}
+#lcol,#rcol{position:absolute;top:calc(var(--tb) + env(safe-area-inset-top,0px));display:flex;flex-direction:column;gap:8px}#lcol{left:8px}#rcol{right:8px}
+.sq{position:relative;width:64px;border-radius:14px;background:linear-gradient(180deg,#2b3fd0,#1b1d82);border:2px solid #6bb2ff;color:#fff;font-size:10px;font-weight:700;padding:4px 2px;display:flex;flex-direction:column;align-items:center;gap:1px;box-shadow:0 3px 8px rgba(0,0,0,.45)}
+.sq i{font-style:normal;font-size:24px}.sq em{font-style:normal;color:#ffd54a;font-size:10px}.sq.vip{background:linear-gradient(180deg,#ffd54a,#ff9f1a);color:#3a1f0b}.sq .dot{position:absolute;top:-4px;right:-4px;width:14px;height:14px;border-radius:50%;background:#ff3b3b;border:2px solid #fff;display:none}
+#logo{position:absolute;left:50%;top:calc(var(--tb) + 6px + env(safe-area-inset-top,0px));transform:translateX(-50%);text-align:center;font-weight:900;line-height:.9;font-size:clamp(40px,10vw,70px);pointer-events:none}
+#logo span{display:block;background:linear-gradient(180deg,#ffe36a,#ff9d1c);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-stroke:3px #7c1d00;filter:drop-shadow(0 4px 0 #7c1d00)}
+#logo b{background:linear-gradient(180deg,#8be9ff,#1c9bff);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-stroke:3px #0b2a7c;filter:drop-shadow(0 4px 0 #0b2a7c);font-size:.9em}
+#playb{position:absolute;right:16px;bottom:calc(22px + env(safe-area-inset-bottom,0px))}
+body:not(.menu) #logo,body:not(.menu) #playb{display:none}
+body.menu #mm,body.menu #mmL{display:none}
+#mm{left:8px;right:auto;top:calc(var(--tb) + env(safe-area-inset-top,0px));border-radius:50%;border:3px solid #6bb2ff;box-shadow:0 3px 10px rgba(0,0,0,.45)}
+#mmL{position:fixed;left:8px;top:calc(var(--tb) + 114px + env(safe-area-inset-top,0px));width:110px;text-align:center;font-size:11px;color:#fff;background:rgba(20,10,60,.75);border-radius:10px;padding:2px;z-index:6}
+body:not(.menu) #lcol{top:calc(var(--tb) + 142px + env(safe-area-inset-top,0px))}
+body:not(.menu) #lcol .sq{width:46px;padding:5px 0}body:not(.menu) #lcol .sq span{display:none}
+#ms{top:calc(var(--tb) + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);max-width:42vw;text-align:center;background:linear-gradient(180deg,#2b3fd0,#1b1d82);border:2px solid #6bb2ff;color:#fff;font-size:12px}
+#warn{top:calc(var(--tb) + 56px + env(safe-area-inset-top,0px))}#hint{top:calc(var(--tb) + 90px + env(safe-area-inset-top,0px))}
+#act{left:50%;right:auto;transform:translateX(-50%);bottom:calc(120px + env(safe-area-inset-bottom,0px));background:linear-gradient(180deg,#ffe36a,#ff9d1c);color:#fff;border:2px solid #fff3b0;border-radius:16px;text-shadow:0 2px 0 #b35a00;font-size:15px;padding:12px 20px;max-width:80vw}
+#bn{bottom:calc(185px + env(safe-area-inset-bottom,0px))}
+#acts{position:fixed;right:12px;bottom:calc(22px + env(safe-area-inset-bottom,0px));display:flex;gap:8px;align-items:flex-end}
+.rb{width:56px;height:56px;border-radius:50%;border:3px solid #fff3b0;background:radial-gradient(circle at 35% 30%,#ffe36a,#ff9d1c);box-shadow:0 4px 0 #b36300,0 6px 12px rgba(0,0,0,.45);font-size:22px;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1;color:#3a1f0b}
+.rb small{font-size:9px;font-weight:800;margin-top:1px}.rb.big{width:72px;height:72px;font-size:28px}.rb.on{outline:4px solid #5be37a}
+body.bk #bRun,body.bk #bBike{display:none}body:not(.bk) #bBrake,body:not(.bk) #bExit{display:none}
+body.ads #acts{bottom:calc(74px + env(safe-area-inset-bottom,0px))}
+#dpad{position:fixed;left:18px;bottom:calc(24px + env(safe-area-inset-bottom,0px));width:132px;height:132px;display:none;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:4px}
+#dpad b{background:rgba(255,255,255,.3);border:2px solid #fff;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;user-select:none;touch-action:none}
+#dpad b[data-k=w]{grid-area:1/2}#dpad b[data-k=a]{grid-area:2/1}#dpad b[data-k=d]{grid-area:2/3}#dpad b[data-k=s]{grid-area:3/2}
+body.btnctl #joy{display:none!important}body.btnctl #dpad{display:grid}body.ads #dpad{bottom:calc(76px + env(safe-area-inset-bottom,0px))}
+.pnl{position:relative;background:linear-gradient(180deg,#2b3fd0,#1b1d82);border:3px solid #6bb2ff;border-radius:22px;box-shadow:0 0 0 3px #12206b,0 14px 34px rgba(0,0,0,.6);color:#fff;padding:14px;width:100%;max-width:520px;max-height:92vh;overflow:auto;touch-action:pan-y}
+.pnl h2{margin:0 0 8px;font-size:22px;text-shadow:0 2px 0 #0b1450}.pnl h3{margin:12px 0 4px;font-size:15px;color:#ffd54a}
+.ov .bx{background:linear-gradient(180deg,#2b3fd0,#1b1d82);color:#fff;border:3px solid #6bb2ff;box-shadow:0 0 0 3px #12206b,0 14px 34px rgba(0,0,0,.6)}
+.xb{position:absolute;top:8px;right:8px;width:34px;height:34px;border-radius:9px;background:linear-gradient(180deg,#ff6b6b,#d92b2b);border:2px solid #fff;color:#fff;font-weight:900;font-size:16px;z-index:2}
+.split{padding:0;align-items:stretch;background:none}.split .win{flex:1 1 34%}.split .pnl{flex:1 1 66%;max-width:none;max-height:none;width:auto;border-radius:22px 0 0 22px;border-right:0;padding-top:46px}
+@media (max-aspect-ratio:1/1){.split{flex-direction:column}.split .win{flex:1 1 40%}.split .pnl{flex:1 1 60%;border-radius:22px 22px 0 0;border-bottom:0}}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}.tabs button{flex:1;padding:7px 4px;border-radius:10px;border:2px solid #4a6fe0;background:#1a2a8c;color:#bcd0ff;font-weight:700}.tabs button.on{background:linear-gradient(180deg,#ff6b6b,#d92b2b);color:#fff;border-color:#fff}
+.grid6{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0}.tile{background:#fff;border-radius:12px;padding:6px;text-align:center;color:#222;font-weight:700;border:3px solid transparent;cursor:pointer}.tile.sel{border-color:#ffb300;box-shadow:0 0 0 2px #ffe08a}
+.tile .tv{height:54px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:30px}.tile .sw{width:100%;aspect-ratio:1;border-radius:50%;border:4px solid #fff;box-shadow:0 0 0 1px #888}.pr{margin-top:4px;font-size:13px;color:#7a4a00;background:#fff3c4;border-radius:10px}
+.dgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(58px,1fr));gap:6px}.dd{background:#fff;color:#222;border-radius:10px;padding:5px 2px;text-align:center;font-size:11px;border:3px solid transparent}.dd.cur{border-color:#ffb300;background:#fff3c4}.dd .di{font-size:24px;margin:2px 0}
+#drwbg{position:fixed;inset:0;z-index:25;background:rgba(0,0,0,.45);display:none}body.dopen #drwbg{display:block}
+#drw{position:fixed;top:0;right:0;bottom:0;width:min(88vw,370px);z-index:26;transform:translateX(105%);transition:transform .28s;background:linear-gradient(180deg,#fff7e0,#ffe9b8);color:#3a1f0b;border-left:4px solid #ffb300;display:flex;flex-direction:column;touch-action:pan-y}body.dopen #drw{transform:none}
+#drw .dh{display:flex;justify-content:space-between;align-items:center;padding:calc(12px + env(safe-area-inset-top,0px)) 14px 12px;background:linear-gradient(90deg,#5f1d78,#d9480f);color:#fff}#drw .dh .xb{position:static}
+.ds{overflow:auto;padding:6px 14px calc(22px + env(safe-area-inset-bottom,0px));flex:1}.ds h3{margin:14px 0 6px;font-size:15px;color:#7a4a00}
+.seg{display:flex;gap:6px;flex-wrap:wrap}.seg button{flex:1;padding:8px;border-radius:10px;border:2px solid #ffb300;background:#fff;color:#7a4a00;font-weight:700}.seg button.on{background:linear-gradient(180deg,#ffe36a,#ff9d1c);color:#3a1f0b}
+#sLang{font-size:15px;padding:8px;border-radius:10px;border:2px solid #ffb300;width:100%}.st{background:none;border:0;font-size:28px;color:#ffb300}
+
+/* ---- UI v4: compact in-game HUD, square menu ---- */
+body.ingame{--tb:62px}
+body.ingame #icons,body.ingame #lcol,body.ingame #rcol,body.ingame #prof{display:none!important}
+body.ingame #coin{font-size:15px;padding:3px 4px 3px 10px}
+body.menu #mnuBtn{display:none}
+#mnuBtn{position:fixed;top:calc(8px + env(safe-area-inset-top,0px));right:8px;width:46px;height:46px;font-size:22px;z-index:7}
+body.ingame #mm{width:84px;height:84px}
+body.ingame #mmL{top:calc(var(--tb) + 88px + env(safe-area-inset-top,0px));width:84px;font-size:10px}
+body.ingame #ms{top:calc(10px + env(safe-area-inset-top,0px));max-width:36vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:11px;padding:5px 10px}
+#bJump,#bBike,#bBrake,#bExit{display:none!important}
+#bRun{background:conic-gradient(#5be37a calc(var(--p,100)*1%),#6b6b6b 0);width:66px;height:66px}#bRun.cool{filter:saturate(.6)}
+#difb{position:absolute;right:16px;bottom:calc(88px + env(safe-area-inset-bottom,0px));width:min(70vw,280px);pointer-events:auto}#difb button{background:#1a2a8c;color:#bcd0ff;border-color:#4a6fe0}#difb button.on{background:linear-gradient(180deg,#ff6b6b,#d92b2b);color:#fff;border-color:#fff}
+body:not(.menu) #difb{display:none}
+#mnuBg{position:fixed;inset:0;z-index:25;background:rgba(0,0,0,.5);display:none}body.mopen #mnuBg{display:block}
+#mnu{position:fixed;top:0;right:0;bottom:0;width:min(90vw,390px);z-index:26;transform:translateX(105%);transition:transform .25s;background:linear-gradient(180deg,#2b3fd0,#1b1d82);border-left:4px solid #6bb2ff;color:#fff;display:flex;flex-direction:column}body.mopen #mnu{transform:none}
+#mnu .dh{display:flex;justify-content:space-between;align-items:center;padding:calc(12px + env(safe-area-inset-top,0px)) 14px 12px;background:linear-gradient(90deg,#5f1d78,#d9480f)}#mnu .dh .xb{position:static}
+.mg2{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:12px 12px calc(20px + env(safe-area-inset-bottom,0px));overflow:auto}
+.mt{aspect-ratio:1;border-radius:16px;background:linear-gradient(180deg,#3a52e8,#2234b0);border:2px solid #6bb2ff;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:11px;font-weight:700;padding:4px;box-shadow:0 3px 8px rgba(0,0,0,.4)}.mt i{font-style:normal;font-size:30px}
+#whl{width:230px;height:230px;border-radius:50%;margin:14px auto;border:6px solid #ffd54a;position:relative;background:conic-gradient(#e03131 0 45deg,#fab005 45deg 90deg,#2f9e44 90deg 135deg,#1c7ed6 135deg 180deg,#9c36b5 180deg 225deg,#f06595 225deg 270deg,#15aabf 270deg 315deg,#ff922b 315deg 360deg);box-shadow:0 0 0 4px #12206b}
+.wl{position:absolute;left:50%;top:50%;transform-origin:0 0;margin-left:-14px;color:#fff;font-weight:900;font-size:15px;text-shadow:0 1px 3px #000}
+.wp{width:0;height:0;border-left:12px solid transparent;border-right:12px solid transparent;border-top:22px solid #fff;margin:0 auto -34px;position:relative;z-index:2}
+
+/* ---- FunnyMela polish ---- */
+#hint,#mmL{display:none!important}
+#toast{top:calc(var(--tb) + 8px + env(safe-area-inset-top,0px))}
+#lcol,#rcol{gap:12px}.sq{height:68px;justify-content:center}
+#difb{bottom:calc(104px + env(safe-area-inset-bottom,0px))}
+#acts{bottom:calc(26px + env(safe-area-inset-bottom,0px));right:14px}#bRun{width:72px;height:72px;font-size:26px}
+#act{bottom:calc(132px + env(safe-area-inset-bottom,0px))}
+body.intro #mm,body.intro #ms,body.intro #acts,body.intro #mnuBtn,body.intro #coin{display:none}
+@media (max-height:480px){:root{--tb:62px}.sq{width:54px;height:54px}.sq span,.sq em{display:none}#logo{font-size:36px}#difb{bottom:calc(86px + env(safe-area-inset-bottom,0px))}}
+#mnu{background:radial-gradient(circle at 30% 0,#3a52e8,#141a63 62%);width:min(92vw,400px)}
+#mnu .mh{display:flex;justify-content:space-between;align-items:center;padding:calc(14px + env(safe-area-inset-top,0px)) 14px 12px;background:linear-gradient(90deg,#5f1d78,#d9480f)}#mnu .mh .xb{position:static}
+.mhp{display:flex;gap:10px;align-items:center}.mhp b{font-size:15px}.mhp small{display:block;font-size:11px;color:#ffe8a3}
+#mav{width:48px;height:48px;border-radius:50%;background:#fff;border:3px solid #ffd54a;font-size:28px;display:flex;align-items:center;justify-content:center}
+.mcoin{margin:12px 14px 2px;padding:8px 14px;border-radius:14px;background:rgba(0,0,0,.3);border:2px solid #6bb2ff;font-size:18px;color:#ffe36a}
+.mg2{flex:1;gap:12px;padding:12px 14px;align-content:start}
+.mt{aspect-ratio:auto;height:104px;background:linear-gradient(160deg,var(--c1),var(--c2));border:2px solid rgba(255,255,255,.75);border-radius:18px;gap:5px;position:relative;box-shadow:0 4px 0 rgba(0,0,0,.35),0 8px 14px rgba(0,0,0,.35)}
+.mt:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(0,0,0,.35)}
+.mt .ic{width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.3);font-size:26px;display:flex;align-items:center;justify-content:center}
+.mt b{font-size:12px;text-shadow:0 1px 2px rgba(0,0,0,.55);line-height:1.1;text-align:center}
+.mt em{position:absolute;top:5px;right:5px;font-style:normal;font-size:10px;font-weight:800;background:rgba(0,0,0,.45);padding:1px 7px;border-radius:9px}
+.mft{text-align:center;font-size:11px;opacity:.75;padding:6px 0 calc(14px + env(safe-area-inset-bottom,0px))}
+.ds h3{background:rgba(255,179,0,.18);border-radius:10px;padding:6px 10px}
+
+/* ---- shows ---- */
+.mgbg{position:absolute;inset:0;background:radial-gradient(circle at 50% 30%,#7a3fd0,#1a0b3d 70%)}
+.mgbg::before,.mgbg::after{content:"";position:absolute;top:0;bottom:0;width:16%;background:repeating-linear-gradient(90deg,#9b1c1c,#c92a2a 14px)}.mgbg::before{left:0}.mgbg::after{right:0}
+.mgm{position:absolute;left:0;right:0;top:20%;text-align:center;font-size:90px}
+#bird{position:absolute;left:50%;top:40%;font-size:48px;opacity:0}#bird.fly{animation:bflo 2s ease-out forwards}
+@keyframes bflo{0%{opacity:1;transform:translate(-50%,0) scale(.5)}100%{opacity:0;transform:translate(90%,-220px) scale(1.7)}}
+#cups{position:absolute;left:50%;top:58%;width:min(80vw,360px);height:120px;transform:translateX(-50%)}
+.cup{position:absolute;top:0;width:30%;height:110px;text-align:center;font-size:62px;transition:left .3s;cursor:pointer}
+.cup .ch{display:inline-block;transition:transform .3s}.cup.up .ch{transform:translateY(-44px)}
+.cup .cn{position:absolute;left:0;right:0;bottom:0;font-size:32px;opacity:0}.cup.up .cn{opacity:1}
+.kbg{position:absolute;inset:0;background:radial-gradient(circle at 50% 70%,#d9a05b,#6d4c2a 70%)}
+.kbar{position:absolute;left:10%;right:10%;top:24%;height:22px;border-radius:12px;background:#4a2c12;border:3px solid #fff;overflow:hidden}.kbar i{display:block;height:100%;width:50%;background:linear-gradient(90deg,#5be37a,#ffd54a)}
+.kw{position:absolute;left:24%;top:40%;font-size:84px}.kw.k2{left:auto;right:24%}
+.kvs{position:absolute;left:0;right:0;top:46%;text-align:center;color:#fff;font-weight:900;font-size:28px;text-shadow:0 2px 6px #000}
+#ktap{position:absolute;left:50%;bottom:12%;margin-left:-110px;width:220px}
+.nbg{position:absolute;inset:0;background:linear-gradient(#3a0d0d,#8a1c1c 45%,#2b1a55)}
+.nbg::before,.nbg::after{content:"";position:absolute;top:0;bottom:0;width:14%;background:repeating-linear-gradient(90deg,#7a1010,#b02020 12px)}.nbg::before{left:0}.nbg::after{right:0}
+.nch{position:absolute;left:0;right:0;top:22%;text-align:center;font-size:110px;animation:bob .6s ease-in-out infinite alternate}
+@keyframes bob{from{transform:translateY(0)}to{transform:translateY(-14px)}}
+.nsp{position:absolute;left:10%;right:10%;top:56%;background:#fff;color:#222;border-radius:16px;padding:12px;font-size:17px;font-weight:700;text-align:center;box-shadow:0 4px 12px rgba(0,0,0,.4)}
+</style></head><body class="menu">
+<div id="start"><div style="font-size:70px">🎡</div><h1>Desi Mela 3D</h1>
+<div>Partner ke saath bike par mela chalo, par Mummy-Papa se bacho! Diwali ke patake bhi jalao 🎆</div>
+<div class="set">
+<label>Aapka naam</label><input id="pn2" maxlength="14" placeholder="Mela Raja" style="font-size:15px;padding:6px;border-radius:8px;border:0;width:140px"><label>Aap kaun?</label><select id="sg"><option value="b">🧑 Ladka</option><option value="g">👧 Ladki</option></select>
+<label>Shuru ke paise</label><select id="sp"><option selected>1500</option></select>
+<label>Dost saath</label><select id="sf"><option>0</option><option selected>1</option><option>2</option><option>3</option></select>
+<label>Dukandar ki awaaz</label><select id="sv"><option value="1">ON</option><option value="0">OFF</option></select>
+<label>Dhol music</label><select id="sm"><option value="1">ON</option><option value="0">OFF</option></select></div>
+<div style="margin-bottom:10px"><button class="b" onclick="openSett()">⚙️ Settings & Feedback</button> <button class="b" onclick="openStore()">🛍️ Store</button></div><button class="b" style="font-size:20px;padding:14px 34px" id="go">▶ Game Shuru</button>
+<p style="font-size:13px;opacity:.9">📱 Mobile: joystick + button<br>💻 PC: W A S D / Arrow = chalo, Shift = daudo, E ya Space = kharido/baitho, Q Z ya mouse drag = camera, M = music, F = fullscreen</p><p id="pgl" style="font-size:12px"></p></div>
+<div id="ui"><div id="logo"><span>FUNNY</span><b>MELA</b></div>
+<div id="topbar"><div id="prof" onclick="openChar()"><div id="pav">🧑</div><div><div id="pnm">Player01</div><div class="lv"><span id="plv" data-i="level">Level 1</span></div><div class="xpb"><i id="xpf"></i></div></div></div>
+<div id="coin"><span>🪙</span><span id="wal">1500</span><button class="plus" onclick="openStore()">+</button><span id="inv"></span></div>
+<div id="icons"><button class="ico" id="bm">🎵</button><button class="ico" id="bv">🔊</button><button class="ico" id="bf">👥 1</button><button class="ico wide" id="br">🎁 Free ₹</button><button class="ico" id="bg">⚙️</button><button id="bc" hidden></button><button id="bs" hidden></button></div></div>
+<div id="lcol"><button class="sq" onclick="openShop2()"><i>🏪</i><span data-i="shop">Shop</span></button><button class="sq" onclick="openRew()"><i>🏆</i><span data-i="rewards">Rewards</span></button><button class="sq" onclick="openMap()"><i>🗺️</i><span data-i="map">Map</span></button></div>
+<div id="rcol"><button class="sq" onclick="openDly()"><i>🎁</i><span data-i="daily">Daily Reward</span><u class="dot"></u></button><button class="sq" onclick="openStore()"><i>⭐</i><span data-i="offer">Special Offer</span><em id="otm">23:59:59</em></button><button class="sq vip" onclick="openStore()"><i>👑</i><span>VIP</span></button></div>
+<div id="difb" class="seg"><button onclick="setDif(0)">Normal</button><button onclick="setDif(1)">Medium</button><button onclick="setDif(2)">Hard</button></div><button id="playb" class="gb big" onclick="$('go').click()">▶ <span data-i="play">Start</span></button></div>
+<div id="hud"><div class="pn" id="ms">🎯 Mission</div>
+
+<button id="mnuBtn" class="ico" onclick="openMnu()">☰</button><div id="mmL" onclick="openMap()">मेला परिदृश्य</div>
+<div id="dpad"><b data-k="w">▲</b><b data-k="a">◀</b><b data-k="d">▶</b><b data-k="s">▼</b></div>
+<div id="acts"><button class="rb" id="bRun">🏃<small data-i="run">Run</small></button><button class="rb" id="bJump">⬆️<small data-i="jump">Jump</small></button><button class="rb big" id="bBike">🏍️<small data-i="bike">Bike</small></button><button class="rb" id="bBrake">🛑<small data-i="brake">Brake</small></button><button class="rb big" id="bExit">⛔<small data-i="exit">Exit</small></button></div>
+<div id="joy"><div id="knob"></div></div><button class="b" id="act"></button><canvas id="mm" width="110" height="110"></canvas></div>
+<div id="shop"><div class="bx"><h2 id="sn" style="margin:0"></h2><div id="sc" style="margin:6px 0;color:var(--ac);font-weight:700"></div><div id="si"></div><div style="text-align:center;margin-top:12px"><button class="b" onclick="closeShop()">Aage chalo ➡️</button></div></div></div>
+<div id="ad"></div><div id="hint"></div><div id="adv"><div class="bx"><small>📢 Vigyapan (Sponsored)</small><div style="font-size:56px;margin:10px 0">🛍️</div><div id="advt" style="font-weight:700"></div><button class="b" id="advb" disabled style="margin-top:12px"></button></div></div><div class="ov" id="store"><div class="bx" id="stbox"></div></div>
+<div class="ov" id="sett"><div class="bx"><h2>⚙️ Settings</h2><div>Camera:<br><button class="b" onclick="setCam(0)">📷 3rd Person</button> <button class="b" onclick="setCam(1)">👁️ First Person</button> <button class="b" onclick="setCam(2)">🦅 Bird View</button></div><div style="margin:12px 0"><button class="b" onclick="music(!mOn)">🎵 Music ON/OFF</button> <button class="b" onclick="voice=!voice;toast(voice?'🗣️ Awaaz ON':'🤐 Awaaz OFF')">🗣️ Awaaz ON/OFF</button></div><h3>📄 Pages</h3><div id="pgrow"></div><h3>💬 Feedback</h3><textarea id="fbt" rows="3" maxlength="300" placeholder="Game kaisa laga? Kya badlen?" style="width:100%;font-size:15px;border-radius:10px;padding:8px"></textarea><div style="margin-top:8px"><button class="b" onclick="sendFb()">Bhejo 📨</button> <button class="b" onclick="$('sett').style.display='none'">Band</button></div></div></div>
+<div class="ov" id="rew"><div class="pnl"><button class="xb" onclick="cls('rew')">✕</button><h2 data-i="rewards">Rewards</h2><div id="rewb"></div></div></div>
+<div class="ov" id="dly"><div class="pnl"><button class="xb" onclick="cls('dly')">✕</button><h2>🎁 Daily Reward</h2><div id="dlyb"></div></div></div>
+<div class="ov" id="map"><div class="pnl" style="text-align:center"><button class="xb" onclick="cls('map')">✕</button><h2>🗺️ Map</h2><canvas id="mapc" width="300" height="410" style="max-width:100%;border-radius:12px"></canvas></div></div>
+<div class="ov split" id="shp"><div class="win"></div><div class="pnl"><button class="xb" onclick="closeShop2()">✕</button><h2>🏪 Shop</h2><div id="shpt" class="tabs"></div><div id="shpg" class="grid6"></div><p style="text-align:center"><button class="gb" id="shpbuy">Buy</button></p></div></div>
+<div class="ov split" id="chr"><div class="win"></div><div class="pnl"><button class="xb" onclick="closeChar(1)">✕</button><h2>🧍 Character</h2><input id="cname" maxlength="14" value="Player01" style="width:100%;font-size:16px;padding:8px;border-radius:10px;border:0"><div id="chrt" class="tabs"></div><div id="chrg" class="grid6"></div><p style="text-align:center"><button class="gb" onclick="closeChar(0)">Save</button></p></div></div>
+<div id="drwbg" onclick="closeDrw()"></div>
+<div id="drw"><div class="dh"><h2 style="margin:0" data-i="settings">Settings</h2><button class="xb" onclick="closeDrw()">✕</button></div><div class="ds">
+<h3>📷 Camera</h3><div class="seg" id="sg_cam"><button onclick="setCam(0);segs()">3rd Person</button><button onclick="setCam(1);segs()">First Person</button><button onclick="setCam(2);segs()">Bird View</button></div>
+<h3>🔊 Sound</h3><div class="seg"><button id="sMus" onclick="music(!mOn);segs()">Music ON</button><button id="sSfx" onclick="SFXOFF=!SFXOFF;segs()">SFX ON</button></div>
+<h3>🗣️ Voice</h3><div class="seg" id="sVL"><button onclick="setVL(0)">Off</button><button onclick="setVL(1)">Low</button><button onclick="setVL(2)">Normal</button><button onclick="setVL(3)">High</button></div>
+<h3>🌐 Language</h3><select id="sLang" onchange="setLang(this.value)"><option value="hi">हिंदी</option><option value="en">English</option></select>
+<h3>🎚️ Sensitivity</h3><input type="range" id="sSens" min="40" max="200" value="100" oninput="SENS=this.value/100" style="width:100%">
+<h3>🎮 Control</h3><div class="seg"><button id="cJoy" onclick="setCtl(0)">Joystick</button><button id="cBtn" onclick="setCtl(1)">Button</button></div>
+<h3>🔥 Difficulty</h3><div class="seg" id="sDif"><button onclick="setDif(0)">Normal</button><button onclick="setDif(1)">Medium</button><button onclick="setDif(2)">Hard</button></div><h3>📄 Pages</h3><div id="pgrow2"></div>
+<h3>⭐ Rate Us</h3><div id="stars"></div><textarea id="fbt2" rows="3" maxlength="300" placeholder="Feedback likho..." style="width:100%;font-size:15px;border-radius:10px;padding:8px;margin-top:6px"></textarea><div style="margin-top:8px"><button class="gb sm" onclick="sendFb2()">Send</button> <button class="gb sm" onclick="openPage('Contact')">Support</button></div>
+</div></div>
+<div class="ov" id="spn"><div class="pnl" style="text-align:center"><button class="xb" onclick="cls('spn')">✕</button><h2>🎰 Lucky Spin</h2><div class="wp"></div><div id="whl"></div><div id="spr" style="font-weight:800;min-height:24px"></div><button class="gb" id="spb" onclick="doSpin()">SPIN</button></div></div>
+<div class="ov" id="ask" style="z-index:40"><div class="pnl" style="text-align:center"><p id="askt" style="font-size:16px"></p><button class="gb" id="asky">Haan</button> <button class="gb" onclick="cls('ask')">Nahi</button></div></div>
+<div id="mnuBg" onclick="closeMnu()"></div>
+<div id="mnu"><div class="mh"><div class="mhp"><div id="mav">🧑</div><div><b id="mnm">Player01</b><small id="mlv">Level 1</small><div class="xpb"><i id="mxp"></i></div></div></div><button class="xb" onclick="closeMnu()">✕</button></div><div class="mcoin">🪙 <b id="mcn">1500</b></div><div class="mg2" id="mnug"></div><div class="mft">FunnyMela • Game ruka hua hai ⏸</div></div>
+<div class="ov" id="pg"><div class="bx" id="pgbox" style="text-align:left"></div></div><div class="ov" id="don"><div class="bx" id="donbox"></div></div><div class="scene" id="scn" onclick="if(!event.target.closest('.nc')&&event.target.id!='mkm')endScene()"></div>
+<div class="ov" id="ck"><div class="bx" id="ckbox"></div></div>
+<div class="ov" id="over" style="z-index:30"><div class="bx"><div style="font-size:60px">😭</div><h2>Pitai ho gayi! GAME OVER</h2><p>Mummy-Papa ne pakad liya. Ghar chalo beta!</p><button class="b" onclick="location.reload()">🔁 Fir se khelo</button></div></div>
+<div id="warn"></div><button class="b" id="bn">🎇 Patake jalao</button>
+<script>/* Backend config: Set your deployed backend URL here. Auto-detects http://localhost:3000 when running locally or from local file. */window.MELA_API=window.MELA_API||(location.protocol==="file:"||location.hostname==="localhost"||location.hostname==="127.0.0.1"?"http://localhost:3000":"");window.MELA_ENDPOINT=window.MELA_ENDPOINT||(window.MELA_API?window.MELA_API+"/event":"");</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const $=i=>document.getElementById(i),V=THREE.Vector3;
+let SFXOFF=false,inBG=0,VL=2,SENS=1,VOL=[0,.45,.8,1],AMB=[0,.2,.6,1];let ctx,mOn=false,mT,beat=0,voice=true,wal=1500,inv=[],friends=1,P,started=false,riding=null,near=null,shopOpen=false,yaw=0,T=0,last=0,eng=0,jx=0,jz=0,jid=null,dg=null;
+const keys={};
+/* ---------- audio ---------- */
+function A(){if(!ctx)ctx=new(window.AudioContext||window.webkitAudioContext)();if(ctx.state==="suspended")ctx.resume();return ctx}
+function tone(f,d,ty,v,sl){if(SFXOFF&&!inBG)return;try{const c=A(),o=c.createOscillator(),g=c.createGain();o.type=ty||"sine";o.frequency.setValueAtTime(f,c.currentTime);if(sl)o.frequency.exponentialRampToValueAtTime(sl,c.currentTime+d);g.gain.setValueAtTime(v||.2,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+d);o.connect(g).connect(c.destination);o.start();o.stop(c.currentTime+d)}catch(e){}}
+function noise(d,v,hp){if(SFXOFF&&!inBG)return;try{const c=A(),b=c.createBuffer(1,c.sampleRate*d,c.sampleRate),a=b.getChannelData(0);for(let i=0;i<a.length;i++)a[i]=Math.random()*2-1;const s=c.createBufferSource(),g=c.createGain(),f=c.createBiquadFilter();f.type="highpass";f.frequency.value=hp||1500;s.buffer=b;g.gain.setValueAtTime(v||.15,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+d);s.connect(f).connect(g).connect(c.destination);s.start()}catch(e){}}
+let _lastCoinSnd=0;
+const FX={bell(){tone(1400,.4,"sine",.15);setTimeout(()=>tone(1800,.4,"sine",.1),110)},coin(){const n=Date.now();if(n-_lastCoinSnd<120)return;_lastCoinSnd=n;tone(988,.12,"triangle",.09);setTimeout(()=>tone(1319,.2,"sine",.08),80)},lose(){tone(300,.5,"sawtooth",.12,100)},whoosh(){noise(1.6,.15,400);tone(200,1.6,"sawtooth",.05,700)}};
+const sfx=n=>(FX[n]||FX.bell)();
+function say(t,p){if(!voice||VL==0||!window.speechSynthesis)return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang="hi-IN";u.volume=VOL[VL];u.rate=.95;u.pitch=p||1.1;const v=speechSynthesis.getVoices().find(x=>x.lang&&x.lang.toLowerCase().startsWith("hi"));if(v)u.voice=v;speechSynthesis.speak(u)}
+function music(on){mOn=on;$("bm").textContent=on?"🎵":"🔇";clearInterval(mT);if(on)mT=setInterval(()=>{const b=beat++%8;if(b==0||b==3||b==4)tone(110,.3,"triangle",.45,45);if(b%2==1)tone(500,.08,"square",.04,300);if(b>5)tone(220,.15,"triangle",.25,90)},260)}
+/* ---------- 3D helpers ---------- */
+const M=c=>typeof c=="object"?c:new THREE.MeshLambertMaterial({color:c});
+function box(w,h,d,c,x,y,z,p){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),M(c));m.position.set(x,y,z);p&&p.add(m);return m}
+function cy(a,b,h,c,x,y,z,p,s){const m=new THREE.Mesh(new THREE.CylinderGeometry(a,b,h,s||20),M(c));m.position.set(x,y,z);p&&p.add(m);return m}
+const scene=new THREE.Scene();scene.background=new THREE.Color(0x2b1a55);scene.fog=new THREE.Fog(0x2b1a55,80,280);
+const cam=new THREE.PerspectiveCamera(60,1,.1,420),R=new THREE.WebGLRenderer({antialias:true});
+R.setPixelRatio(Math.min(devicePixelRatio,2));document.body.prepend(R.domElement);
+function rs(){R.setSize(innerWidth,innerHeight);cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix()}addEventListener("resize",rs);rs();
+scene.add(new THREE.HemisphereLight(0xffe0b0,0x442266,1.15));const dl=new THREE.DirectionalLight(0xffffff,.6);dl.position.set(20,40,10);scene.add(dl);
+const gr=new THREE.Mesh(new THREE.CircleGeometry(132,64),M(0xb48a5c));gr.rotation.x=-Math.PI/2;scene.add(gr);
+const g2=new THREE.Mesh(new THREE.CircleGeometry(300,24),M(0x2f4a2a));g2.rotation.x=-Math.PI/2;g2.position.y=-.05;scene.add(g2);
+for(let i=0;i<200;i++){const a=i/200*6.283,r=i%2?30:114,b=new THREE.Mesh(new THREE.SphereGeometry(.25,6,6),new THREE.MeshBasicMaterial({color:[0xffd43b,0xff6b6b,0x69db7c,0x74c0fc][i%4]}));b.position.set(Math.cos(a)*r,9+Math.sin(i)*.5,Math.sin(a)*r);if(b.position.z>85&&Math.abs(b.position.x)<80)b.visible=false;scene.add(b)}
+function sign(t,c){const cv=document.createElement("canvas");cv.width=512;cv.height=128;const x=cv.getContext("2d");x.fillStyle="#"+c.toString(16).padStart(6,"0");x.fillRect(0,0,512,128);x.strokeStyle="#ffd43b";x.lineWidth=8;x.strokeRect(4,4,504,120);x.fillStyle="#fff";let fs=54;x.font="bold 54px sans-serif";while(x.measureText(t).width>470&&fs>18){fs-=2;x.font="bold "+fs+"px sans-serif"}x.textAlign="center";x.textBaseline="middle";x.shadowColor="rgba(0,0,0,.6)";x.shadowBlur=6;x.fillText(t,256,68);return new THREE.CanvasTexture(cv)}
+function emo(e){const c=document.createElement("canvas");c.width=c.height=128;const x=c.getContext("2d");x.font="96px serif";x.textAlign="center";x.textBaseline="middle";x.fillText(e,64,70);return new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c),transparent:true}))}
+function person(sh,girl,sk,hc){const g=new THREE.Group(),u=g.userData;u.shirt=M(sh);u.shoe=M(0x222222);const skin=M(sk||0xd9a066);u.skin=skin;
+box(.9,1.1,.5,u.shirt,0,1.55,0,g);const hd=new THREE.Mesh(new THREE.SphereGeometry(.38,12,10),skin);hd.position.y=2.45;g.add(hd);
+const hr=new THREE.Mesh(new THREE.SphereGeometry(.42,12,8,0,6.283,0,1.7),M(hc||0x151515));hr.position.y=2.5;g.add(hr);u.hair=hr.material;
+if(girl){u.hair2=box(.8,1,.25,hc||0x151515,0,2.1,-.3,g).material;cy(.35,.75,.7,u.shirt,0,1.05,0,g)}
+u.hat=cy(.05,.45,.5,0xffffff,0,3,0,g);u.hat.visible=false;
+u.l=new THREE.Group();u.r=new THREE.Group();[u.l,u.r].forEach((l,i)=>{l.position.set(i?.25:-.25,1,0);box(.35,.8,.35,0x34495e,0,-.4,0,l);box(.4,.2,.55,u.shoe,0,-.9,.07,l);g.add(l)});
+u.a=[-1,1].map(s=>{const a=new THREE.Group();a.position.set(s*.6,2,0);box(.25,.9,.25,u.shirt,0,-.4,0,a);g.add(a);return a});return g}
+function walk(p,m,t){const u=p.userData,rn=p===P&&RUN,s=m?Math.sin(t*(rn?18:10))*(rn?1.15:.8):0;u.l.rotation.x=s;u.r.rotation.x=-s;u.a[0].rotation.x=-s;u.a[1].rotation.x=s}
+/* ---------- shops ---------- */
+const SH=[
+["👟","Joota Ghar",0xe03131,"जूते ले लो जूते! नए नए जूते!",[["👟","Sports Shoes",300,"o",0xe8590c],["🥿","Kolhapuri",200,"o",0x8d5524],["👞","Chamda Joota",350,"o",0x111111]]],
+["👕","Kapda Bazaar",0x1c7ed6,"कुर्ते, कमीज़, चुनरी! सब मिलेगा!",[["👕","Laal Kurta",250,"s",0xe03131],["👗","Hara Suit",400,"s",0x2f9e44],["🥻","Peeli Saree",500,"s",0xfab005]]],
+["🧸","Khilona Ghar",0xf06595,"खिलौने ले लो! गुड़िया, गाड़ी, डमरू!",[["🧸","Teddy",150],["🚗","Gaadi",80],["🪀","Latoo",40]]],
+["💍","Chudi Bazaar",0x9c36b5,"रंग बिरंगी चूड़ियाँ ले लो!",[["💍","Kaanch Chudi",60],["📿","Mala",90]]],
+["🥟","Golgappe",0xf08c00,"गरमा गरम गोलगप्पे! खट्टा मीठा पानी!",[["🥟","Golgappe",30],["🥔","Aloo Tikki",35]]],
+["🍥","Jalebi",0xfd7e14,"ताज़ी रसीली जलेबी!",[["🍥","Jalebi",40],["🍩","Imarti",45]]],
+["☕","Chai Wala",0x8d5524,"चाय गरम! कड़क अदरक वाली चाय!",[["☕","Chai",15],["🍪","Biscuit",10]]],
+["🍦","Kulfi",0x15aabf,"ठंडी मलाई कुल्फी, केसर पिस्ता!",[["🍦","Kulfi",50],["🍧","Gola",20]]],
+["🎈","Gubbare",0xff6b6b,"गुब्बारे ले लो गुब्बारे!",[["🎈","Gubbara",10],["🪅","Pinata",70]]],
+["🪁","Patang Manjha",0x20c997,"पतंग ले लो! वो काटा!",[["🪁","Patang",35],["🧵","Manjha",60]]],
+["🌿","Mehendi Art",0x2f9e44,"हाथों में रचेगी मेहंदी!",[["🌿","Mehendi",50],["🖐️","Full Hand",120]]],
+["🧢","Topi Chashma",0x4263eb,"टोपी, पगड़ी, चश्मा! हीरो बन जाओ!",[["🧢","Laal Topi",100,"h",0xe03131],["👳","Pagdi",150,"h",0xff922b],["🕶️","Kaala Topa",90,"h",0x111111]]],
+["🥁","Dholak Bansuri",0xc92a2a,"बांसुरी, डमरू और ढोलक!",[["🥁","Dholak",300],["🪈","Bansuri",70]]],
+["🪔","Diya Sajawat",0xe67700,"दीये, झालर, सजावट का सामान!",[["🪔","Diya",20],["🏮","Lantern",90]]],
+["🍬","Mithai Ghar",0xd6336c,"ताज़ा मिठाई! लड्डू, बर्फी, पेड़ा!",[["🍬","Laddu",60],["🍯","Gulab Jamun",50]]],
+["🍿","Popcorn Bhutta",0xfcc419,"गरम पॉपकॉर्न, भुट्टा भुना हुआ!",[["🍿","Popcorn",25],["🌽","Bhutta",30]]],
+["👜","Bag Ghadi",0x5c7cfa,"थैले, बैग, घड़ी सस्ते में!",[["👜","Jhola",120],["⌚","Ghadi",200]]],
+["💎","Gehne Ghar",0xae3ec9,"नकली गहने, असली चमक!",[["👑","Mukut",350],["💍","Anguthi",100]]]];
+const circ=[];
+const RPN={"Bada Chakri":[-48,-34,11],"Ghoda Jhoola":[40,-30,8],"Jahaz Jhoola":[0,-70,10],"Maut Ka Kuan":[62,12,9],"Udan Jhoola":[-62,16,6],"Break Dance":[34,-66,7],"Toy Train":[-24,-6,8],"Haath Jhoola":[-16,34,5],"Jadu Show":[24,34,5],"Bandar Tamasha":[-40,52,5],"Helicopter Ride":[12,-42,6],"Roller Coaster":[78,-58,14],"Drop Tower":[-34,-70,5],"Tora Tora":[-78,-40,9],"Dragon Jhoola":[-72,52,8],"Takkar Gaadi":[74,44,9],"Bhoot Bangla":[0,66,7],"Sheesh Mahal":[44,64,6],"Kushti Akhara":[-30,-48,5],"Nautanki Manch":[92,-8,6],"Donation Pole":[0,-6,7],"Donation Pole 2":[-70,86,7]},PTS=[];let sd=7;const rnd=()=>(sd=(sd*16807)%2147483647)/2147483647;
+function place(a,b,sp,av){for(let k=0;k<500;k++){const an=rnd()*6.283,r=a+rnd()*(b-a),x=Math.cos(an)*r,z=Math.sin(an)*r;if(Math.hypot(x,z-12)<14||Object.values(RPN).some(q=>Math.hypot(x-q[0],z-q[1])<q[2]+av)||PTS.some(q=>Math.hypot(x-q[0],z-q[1])<sp))continue;PTS.push([x,z]);return[x,z]}const an=rnd()*6.283;return[Math.cos(an)*b,Math.sin(an)*b]}
+function nearR(n){const q=RPN[n],d=Math.hypot(q[0],q[1])||1,x=q[0]+q[0]/d*(q[2]+8),z=q[1]+q[1]/d*(q[2]+8);PTS.push([x,z]);return[x,z]}
+SH.forEach((s,i)=>{const q=i<6?(PTS.push([-40+i*16,94]),[-40+i*16,94]):place(22,118,18,16),x=q[0],z=q[1],g=new THREE.Group();g.position.set(x,0,z);g.rotation.y=i<6?Math.PI:Math.atan2(-x,-z)+(rnd()-.5)*.8;scene.add(g);s.x=x;s.z=z;circ.push({x,z,r:3.4});
+box(6,4.2,.3,0xfff1d6,0,2.1,-1.4,g);box(5.6,1.1,1.4,s[2],0,.55,1.3,g);box(.3,4.6,.3,0x6d4c41,-3,2.3,2,g);box(.3,4.6,.3,0x6d4c41,3,2.3,2,g);
+box(6.6,.25,3.8,s[2],0,4.5,.5,g).rotation.x=.18;
+const sg=new THREE.Mesh(new THREE.PlaneGeometry(5.6,1.4),new THREE.MeshBasicMaterial({map:sign(s[1],s[2])}));sg.position.set(0,5.7,2.2);g.add(sg);
+s[4].forEach((it,k)=>{const e=emo(it[0]);e.scale.set(1.3,1.3,1);e.position.set((k-(s[4].length-1)/2)*1.7,2,1.4);g.add(e)});
+const k=person(0xf08c00,i%3==0,0xc68642);k.position.set(0,0,-.3);g.add(k)});
+/* ---------- rides ---------- */
+const rides=[];
+function addRide(n,price,call,x,z,col,trig,mk){if(RPN[n]){x=RPN[n][0];z=RPN[n][1]}const o=mk(),sp=new THREE.Sprite(new THREE.SpriteMaterial({map:sign(n,0xd9480f),fog:false}));sp.scale.set(10,2.5,1);sp.position.y=o.lh||24;o.g.add(sp);o.g.position.set(x,0,z);scene.add(o.g);rides.push(Object.assign({n,price,call,x,z,col,trig},o));circ.push({x,z,r:col})}
+addRide("Bada Chakri",50,"बैठो बैठो! बड़ा चक्री झूला, ऊपर से पूरा मेला दिखेगा!",-24,-6,2.5,6.5,()=>{const g=new THREE.Group(),w=new THREE.Group(),gs=[];w.position.y=10;g.add(w);
+w.add(new THREE.Mesh(new THREE.TorusGeometry(8,.25,8,48),M(0xffd43b)));for(let i=0;i<6;i++)box(16,.2,.2,0xf08c00,0,0,0,w).rotation.z=i*Math.PI/6;
+for(let i=0;i<10;i++){const a=i/10*6.283,d=new THREE.Group();d.position.set(Math.cos(a)*8,Math.sin(a)*8,0);box(1.6,1.2,1.4,[0xe03131,0x1c7ed6,0x2f9e44,0xf59f00][i%4],0,-.7,0,d);w.add(d);gs.push(d)}
+const seat=new THREE.Object3D();seat.position.set(0,-1.1,0);gs[0].add(seat);[-1,1].forEach(s=>{box(.5,11,.5,0x7048e8,s*2.25,5,0,g).rotation.z=s*.42});
+return{g,seat,up:t=>{w.rotation.z=t*.35;gs.forEach(d=>d.rotation.z=-w.rotation.z)}}});
+addRide("Ghoda Jhoola",30,"बच्चों का घोड़ा झूला, घूमो घूमो!",20,-10,6.6,9.5,()=>{const g=new THREE.Group(),s=new THREE.Group();g.add(s);
+cy(6,6,.6,0xf783ac,0,.3,0,s,32);cy(.4,.4,6,0xffd43b,0,3,0,s);cy(.1,6.6,2.5,0xe03131,0,6.8,0,s,32);
+for(let i=0;i<8;i++){const a=i/8*6.283,x=Math.cos(a)*4,z=Math.sin(a)*4;cy(.08,.08,3.5,0xffd43b,x,2.2,z,s,6);const h=box(.8,.8,1.7,[0xffffff,0x8d5524,0x111111][i%3],x,2.4,z,s);h.rotation.y=-a;box(.45,.9,.45,h.material,0,.55,.9,h)}
+const seat=new THREE.Object3D();seat.position.set(4,2.9,0);s.add(seat);return{g,seat,up:t=>{s.rotation.y=t*.9}}});
+addRide("Jahaz Jhoola",40,"जहाज़ झूला! हवा में उड़ने का मज़ा लो!",0,-30,5,9.5,()=>{const g=new THREE.Group(),p=new THREE.Group(),b=new THREE.Group();p.position.y=12;g.add(p);b.position.y=-10.5;p.add(b);
+box(.6,.6,8,0x7048e8,0,12,0,g);[-3.5,3.5].forEach(z=>[-1,1].forEach(s=>box(.5,12.4,.5,0x7048e8,s*1.5,6,z,g).rotation.z=s*.245));
+box(10,1.2,3,0xe03131,0,0,0,b);[-1,1].forEach(s=>{box(1.5,2.6,3,0xe03131,s*5.2,.7,0,b);box(.2,10.5,.2,0x999999,s*4,5.2,0,b)});
+const seat=new THREE.Object3D();seat.position.set(0,.6,0);seat.rotation.y=Math.PI/2;b.add(seat);return{g,seat,up:t=>{p.rotation.z=Math.sin(t)*1.1}}});
+addRide("Maut Ka Kuan",60,"मौत का कुआँ! दिल थाम के बैठो, मोटरसाइकिल दीवार पर दौड़ेगी!",26,16,6.8,10,()=>{const g=new THREE.Group(),b=new THREE.Group();b.rotation.order="YXZ";g.add(b);
+const w=new THREE.Mesh(new THREE.CylinderGeometry(6.5,6.5,8,40,1,true),new THREE.MeshLambertMaterial({color:0xb5651d,side:THREE.DoubleSide,transparent:true,opacity:.6}));w.position.y=4;g.add(w);cy(6.5,6.5,.4,0x6d4c41,0,.2,0,g,40);
+box(1.8,.5,.6,0xe03131,0,.7,0,b);[-.7,.7].forEach(x=>cy(.4,.4,.2,0x111111,x,.4,0,b,12).rotation.x=Math.PI/2);
+const seat=new THREE.Object3D();seat.position.set(-.1,.9,0);seat.rotation.y=Math.PI/2;b.add(seat);
+return{g,seat,up:t=>{const a=t*2.4;b.position.set(Math.cos(a)*5.8,3.8+Math.sin(t*.6)*2.8,Math.sin(a)*5.8);b.rotation.y=-a-Math.PI/2;b.rotation.x=1}}});
+addRide("Udan Jhoola",40,"उड़न झूला! हवा में चक्कर लगाओ!",-26,20,1,6.5,()=>{const g=new THREE.Group(),t=new THREE.Group();t.position.y=11;g.add(t);cy(.5,.7,11,0xf08c00,0,5.5,0,g);cy(4.5,4.5,.4,0xffd43b,0,0,0,t,24);cy(.1,4,1.2,0xe03131,0,.9,0,t);let seat;
+for(let i=0;i<8;i++){const a=i/8*6.283,pv=new THREE.Group(),sw=new THREE.Group();pv.position.set(Math.cos(a)*4,0,Math.sin(a)*4);pv.rotation.y=-a;t.add(pv);sw.rotation.z=.75;pv.add(sw);cy(.04,.04,5,0xdddddd,0,-2.5,0,sw,6);box(1.2,.2,1,[0xe03131,0x1c7ed6,0x2f9e44][i%3],0,-5,0,sw);if(!i){seat=new THREE.Object3D();seat.position.set(0,-4.9,0);sw.add(seat)}}
+return{g,seat,up:tt=>{t.rotation.y=tt*1.1}}});
+/* ---------- people ---------- */
+const F=[0x9c36b5,0x2f9e44,0xf59f00].map((c,i)=>{const p=person(c,i==0,0xc68642);p.visible=false;scene.add(p);return p});
+const crowd=[];for(let i=0;i<36;i++){const p=person([0xe03131,0x1c7ed6,0xfab005,0x2f9e44,0xffffff,0xf06595][i%6],i%2,[0xd9a066,0xb98055,0xe8b88a][i%3]);const a=Math.random()*6.283,r=10+Math.random()*95;p.position.set(Math.cos(a)*r,0,Math.sin(a)*r);scene.add(p);crowd.push({p,tx:p.position.x,tz:p.position.z,o:Math.random()*9})}
+/* ---------- UI ---------- */
+function toast(t){const e=$("toast");e.textContent=t;e.style.display="block";clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display="none",1800)}
+function hud(){$("wal").textContent=wal;$("inv").textContent=inv.slice(-9).join("")}
+function openShop(s){if(s.don){lastPole=s;return openDonate()}shopOpen=s;$("sn").textContent=s[0]+" "+s[1];$("sc").textContent=s[3];$("si").innerHTML="";s[4].filter(okFor).forEach(it=>{const d=document.createElement("div");d.className="it";d.innerHTML=`<span class="ie">${it[0]}</span><b>${it[1]}</b><span>₹${it[2]}</span>`;const b=document.createElement("button");b.className="b";b.textContent="Kharido";b.onclick=()=>buy(it);d.appendChild(b);$("si").appendChild(d)});$("shop").style.display="flex"}
+function closeShop(){shopOpen=false;$("shop").style.display="none"}
+function buy(it){if(wal<it[2]){toast("Paise kam hain 😅");sfx("lose");say("पैसे कम पड़ गए!");return}wal-=it[2];inv.push(it[0]);track("buy",{item:it[1],price:it[2],shop:shopOpen[1]});if(it[3]){const u=P.userData;if(it[3]=="s")u.shirt.color.setHex(it[4]);if(it[3]=="o")u.shoe.color.setHex(it[4]);if(it[3]=="c")CK[it[4]]=(CK[it[4]]||0)+(it[5]||1);wearAcc(it);if(it[3]=="h"){u.hat.visible=true;u.hat.material.color.setHex(it[4])}toast(it[3]=="c"?"Patake le liye! "+it[0]:"Pehen liya! "+it[0])}else toast("Kharida "+it[0]);sfx("coin");say("धन्यवाद, फिर आना!");hud()}
+const OFF=[[0,0],[.95,0],[-.95,0],[0,-.95]];
+function board(r){if(wal<r.price){toast("Paise kam hain 😅");sfx("lose");return}wal-=r.price;hud();track("ride",{item:r.n,price:r.price});if(r.show){scene2(r);maybeAd();return}riding={r,t:0};sfx("coin");setTimeout(()=>sfx("whoosh"),300);say(r.n=="Maut Ka Kuan"?"वाह! क्या रफ़्तार है!":"वाह वाह! मज़ा आ गया!")}
+function endRide(){const r=riding.r;[P,...F].forEach((p,i)=>{p.quaternion.identity();p.userData.l.rotation.x=p.userData.r.rotation.x=0;p.position.set(r.x+i*1.2-1,0,r.z+r.col+2.5)});riding=null;near=null;maybeAd();if(chase.on){chase.stun=Math.max(chase.stun,4.5);toast("🏃 Bhaago! Parents ko chakkar aa gaya, 4 second ka time!")}}
+function act(){if(shopOpen||!started)return;if(phase=="park")return payPark();if(phase!="play")return;if(riding)return endRide();if(near)near.t=="s"?openShop(near.o):board(near.o)}
+$("act").onclick=act;$("bm").onclick=()=>music(!mOn);$("bv").onclick=()=>{voice=!voice;$("bv").textContent=voice?"🔊":"🔇"};$("bf").onclick=()=>{friends=(friends+1)%4;$("bf").textContent="👥 "+friends};
+addEventListener("keydown",e=>{if(e.target.tagName=="INPUT")return;const k=e.key.toLowerCase();keys[k]=1;if(k=="e"||k==" "||k=="enter"){e.preventDefault();act()}if(k=="escape")closeShop();if(k=="m"&&started)music(!mOn);if(k=="v")camNext();if(k=="f")fs()});addEventListener("keyup",e=>keys[e.key.toLowerCase()]=0);
+const jb=$("joy");function jm(e){const r=jb.getBoundingClientRect(),dx=e.clientX-r.left-r.width/2,dy=e.clientY-r.top-r.height/2,m=Math.min(1,Math.hypot(dx,dy)/(r.width/2)),a=Math.atan2(dy,dx);jx=Math.cos(a)*m;jz=-Math.sin(a)*m;$("knob").style.transform=`translate(${Math.cos(a)*m*35}px,${Math.sin(a)*m*35}px)`}
+jb.onpointerdown=e=>{jid=e.pointerId;jb.setPointerCapture(jid);jm(e)};jb.onpointermove=e=>{if(e.pointerId===jid)jm(e)};jb.onpointerup=jb.onpointercancel=()=>{jid=null;jx=jz=0;$("knob").style.transform=""};
+R.domElement.onpointerdown=e=>{dg=e.clientX;dgy=e.clientY};R.domElement.onpointermove=e=>{if(dg!==null){yaw-=(e.clientX-dg)*.006*SENS;dg=e.clientX;pitch=Math.max(-1.3,Math.min(1.3,pitch-(e.clientY-dgy)*.004*SENS));dgy=e.clientY}};addEventListener("pointerup",()=>dg=null);
+$("go").onclick=()=>{pname=($("pn2").value||"Mela Raja").trim().slice(0,14);const g=$("sg").value=="g";track("play",{gender:g?"ladki":"ladka"});initAds();if(matchMedia("(pointer:fine)").matches){$("hint").textContent="W A S D = chalo • Shift = daudo • E / Space = kharido-baitho • Q Z = camera • M = music • F = fullscreen";setTimeout(()=>$("hint").textContent="",12000)};P=person(g?0xe64980:0x1971c2,g);scene.add(P);setupIntro(g);startUI(g);friends=+$("sf").value;voice=$("sv").value=="1";$("bf").textContent="👥 "+friends;$("bv").textContent=voice?"🔊":"🔇";$("start").style.display="none";$("hud").style.display="block";started=true;if(ENT.vip)wal+=1500;hud();applyLook();if(ENT.noads){$("ad").style.display="none";document.body.classList.remove("ads")}A();sfx("bell");music($("sm").value=="1");say("मेले में आपका स्वागत है! झूले झूलो, खरीदारी करो और खूब मज़े करो!");funnyT=setInterval(funny,22000)};
+/* ---------- loop ---------- */
+function loop(ms){requestAnimationFrame(loop);const dt=PAUSE()?0:Math.min((ms-last)/1000||0,.05);last=ms;T+=dt;
+rides.forEach(r=>r.up(T));fwStep(dt);
+crowd.forEach(c=>{const dx=c.tx-c.p.position.x,dz=c.tz-c.p.position.z,d=Math.hypot(dx,dz);if(d<1){const a=Math.random()*6.283,r=8+Math.random()*105;c.tx=Math.cos(a)*r;c.tz=Math.sin(a)*r}else{c.p.position.x+=dx/d*2*dt;c.p.position.z+=dz/d*2*dt;c.p.rotation.y=Math.atan2(dx,dz)}walk(c.p,1,T+c.o)});
+if(!P){menuCam(dt);R.render(scene,cam);return}
+if(phase!="play"){stepPhase(dt);return}let D=11,H=6,tp=P.position;
+if(riding){const r=riding.r,q=new THREE.Quaternion();r.seat.getWorldQuaternion(q);[P,...F.slice(0,Math.max(friends,1))].forEach((p,i)=>{const o=OFF[i];p.position.copy(r.seat.localToWorld(new V(o[0],-.6,o[1])));p.quaternion.copy(q);p.userData.l.rotation.x=p.userData.r.rotation.x=-1.4});
+rideSnd(r.n,dt,riding.t);
+$("act").style.display="block";$("act").textContent="⬇️ Utro ("+Math.ceil(16-riding.t)+")";if((riding.t+=dt)>16)endRide();D=17;H=9}
+else{let ix=jx+(keys.d||keys.arrowright?1:0)-(keys.a||keys.arrowleft?1:0),iz=jz+(keys.w||keys.arrowup?1:0)-(keys.s||keys.arrowdown?1:0);if(shopOpen)ix=iz=0;const m=Math.hypot(ix,iz);if(m>1){ix/=m;iz/=m}
+const vx=-Math.sin(yaw)*iz+Math.cos(yaw)*ix,vz=-Math.cos(yaw)*iz-Math.sin(yaw)*ix,mv=m>.1;
+if(mv){const sp=SPD();P.position.x+=vx*sp*dt;P.position.z+=vz*sp*dt;let d=((Math.atan2(vx,vz)-P.rotation.y+Math.PI)%6.283+6.283)%6.283-Math.PI;P.rotation.y+=d*Math.min(1,dt*12)}
+circ.forEach(c=>{const dx=P.position.x-c.x,dz=P.position.z-c.z,d=Math.hypot(dx,dz),mn=c.r+.6;if(d<mn){P.position.x=c.x+dx/d*mn;P.position.z=c.z+dz/d*mn}});
+const pr=Math.hypot(P.position.x,P.position.z);if(P.position.z>=100){P.position.x=Math.max(-62,Math.min(62,P.position.x));P.position.z=Math.min(P.position.z,250)}else if(pr>124){P.position.x*=124/pr;P.position.z*=124/pr}
+walk(P,mv,T);
+F.forEach((f,i)=>{f.visible=i<Math.max(friends,1);if(!f.visible)return;const o=new V([-1.7,1.7,0][i],0,[-1.8,-1.8,-3.4][i]).applyAxisAngle(new V(0,1,0),P.rotation.y).add(P.position),dd=f.position.distanceTo(o);{const sp2=mv?SPD()*(dd>1?1.35:1):9,st=Math.min(dd,sp2*dt);if(dd>.001){f.position.x+=(o.x-f.position.x)/dd*st;f.position.z+=(o.z-f.position.z)/dd*st}}f.rotation.y=P.rotation.y;walk(f,dd>.3,T+i)});
+let best=null,bd=1e9;ALL.forEach((s,i)=>{const d=Math.hypot(P.position.x-s.x,P.position.z-s.z);if(d<(s.th?4.6:6.5)&&d<bd){bd=d;best={t:"s",o:s,k:"s"+i}}});rides.forEach((r,i)=>{const d=Math.hypot(P.position.x-r.x,P.position.z-r.z);if(d<r.trig&&d<bd){bd=d;best={t:"r",o:r,k:"r"+i}}});
+if((best&&best.k)!==(near&&near.k)){near=best;if(best){$("act").style.display="block";$("act").textContent=best.t=="s"?"💬 "+best.o[1]+" - Talk":"🎟️ "+best.o.n+" ₹"+best.o.price;if(VL>=2)say(best.t=="s"?best.o[3]:best.o.call);sfx("bell")}else $("act").style.display="none"}}
+if(riding){F.forEach((f,i)=>f.visible=i<Math.max(friends,1))}
+if(boardView.t>0){boardCam(dt)}else if(camMode==1){P.visible=false;const hx=tp.x-Math.sin(yaw)*.3,hz=tp.z-Math.cos(yaw)*.3,hy=riding?tp.y+3.2:3.1;cam.position.set(hx,hy,hz);cam.lookAt(hx-Math.sin(yaw)*10,hy+pitch*10,hz-Math.cos(yaw)*10)}else{P.visible=true;if(camMode==2){D=28;H=30}const tg=new V(tp.x+Math.sin(yaw)*D,H,tp.z+Math.cos(yaw)*D);cam.position.lerp(tg,1-Math.exp(-dt*6));cam.lookAt(tp.x,tp.y+2+pitch*30,tp.z)}R.render(scene,cam)}
+requestAnimationFrame(loop);
+/* ===== v2: thelas, new rides, funny voice, ads, analytics, admin ===== */
+let pname="Guest",funnyT,DB=null,rideN=0,advT;const sid=Math.random().toString(36).slice(2,9),LS="mela_events_v1",ADCFG={on:true,reward:500,every:3,client:"",slot:""};
+try{Object.assign(ADCFG,JSON.parse(localStorage.getItem("mela_cfg")||"{}"))}catch(e){}
+FX.drum=()=>{tone(120,.25,"triangle",.5,50);setTimeout(()=>tone(120,.2,"triangle",.4,50),180)};
+const esc=s=>String(s).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
+/* food thelas (street carts) */
+const THL=[
+["🥟","Pani Puri Thela",0xf08c00,"गोलगप्पे, पानी पूरी, फुचका! भैया एक्स्ट्रा पानी!",[["🥟","Pani Puri",30],["🌶️","Meetha Pani",10]]],
+["🥗","Bhel Chaat",0xfab005,"भेलपुरी, सेवपुरी, दही पूरी, चटपटी चाट!",[["🥗","Bhel Puri",35],["🍲","Sev Puri",40]]],
+["🥠","Samosa Kachori",0xe8590c,"गरमा गरम समोसा कचौड़ी, चटनी के साथ!",[["🥟","Samosa",15],["🥠","Pyaaz Kachori",20]]],
+["🥔","Aloo Tikki",0xd9480f,"आलू टिक्की, रगड़ा पैटीस, छोले टिक्की!",[["🥔","Aloo Tikki",30],["🍛","Ragda Pattice",45]]],
+["🌽","Bhutta Thela",0xfcc419,"भुट्टा भुना हुआ, नींबू नमक के साथ!",[["🌽","Bhutta",30],["🍋","Nimbu Masala",5]]],
+["🎋","Ganne Ka Ras",0x40c057,"ताज़ा गन्ने का रस! ठंडा ठंडा!",[["🎋","Ganne Ras",25],["🧊","Barf Wala Ras",30]]],
+["🥟","Momos Thela",0xe03131,"गरम भाप वाले मोमोज़, तीखी लाल चटनी!",[["🥟","Veg Momos",50],["🧈","Butter Momos",70]]],
+["🍛","Chole Bhature",0xc2255c,"छोले भटूरे, गरमा गरम!",[["🍛","Chole Bhature",70],["🥛","Lassi",35]]],
+["🍔","Vada Pav",0x7048e8,"वड़ा पाव! मुंबई का फेमस वड़ा पाव!",[["🍔","Vada Pav",25],["🌶️","Misal Pav",45]]],
+["🥣","Litti Chokha",0x8d5524,"बिहारी लिट्टी चोखा! घी में डूबा हुआ!",[["🥣","Litti Chokha",60],["🍆","Baingan Chokha",30]]],
+["🏺","Matka Kulfi",0x15aabf,"मटका कुल्फी, केसर पिस्ता, बर्फ जैसी ठंडी!",[["🏺","Matka Kulfi",40],["🍨","Falooda",55]]],
+["🫖","Chai Thela",0xa0522d,"चाय गरम, मसाला चाय, कुल्हड़ वाली!",[["🫖","Kulhad Chai",15],["🍞","Bun Maska",20]]],
+["🥤","Goli Soda",0x1c7ed6,"गोली सोडा, जलजीरा, नींबू पानी!",[["🥤","Goli Soda",20],["🍋","Nimbu Pani",15]]],
+["🌯","Roll & Maggi",0x2f9e44,"एग रोल, पनीर रोल, गरमा गरम मैगी!",[["🌯","Egg Roll",50],["🍜","Maggi",40]]],
+["🥜","Chana Jor Garam",0xf59f00,"चना जोर गरम! मूंगफली, मुरमुरे!",[["🥜","Chana Garam",10],["🍿","Murmura",10]]]];
+THL.forEach((s,j)=>{const q=j<2?nearR(j?"Maut Ka Kuan":"Ghoda Jhoola"):place(30,118,12,22),x=q[0],z=q[1],g=new THREE.Group();g.position.set(x,0,z);g.rotation.y=Math.atan2(-x,-z);scene.add(g);s.x=x;s.z=z;s.th=1;circ.push({x,z,r:1.7});
+box(2.6,.9,1.5,s[2],0,1.1,0,g);[-1,1].forEach(q=>cy(.5,.5,.15,0x222222,q*1.1,.5,.9,g,12).rotation.z=Math.PI/2);
+cy(.06,.06,3,0x6d4c41,0,2.6,-.5,g,6);cy(.05,2,.8,[0xe03131,0xfab005,0x2f9e44][j%3],0,4,-.5,g,12);
+const e=emo(s[0]);e.scale.set(1.2,1.2,1);e.position.set(0,2.1,.2);g.add(e);
+const sg=new THREE.Mesh(new THREE.PlaneGeometry(3.4,.8),new THREE.MeshBasicMaterial({map:sign(s[1],s[2])}));sg.position.set(0,3.2,.9);g.add(sg);
+const k=person(0xffffff,0,0xc68642);k.position.set(0,0,-1.2);k.scale.setScalar(.9);g.add(k)});
+const ALL=SH.concat(THL);
+/* more rides */
+addRide("Break Dance",45,"ब्रेक डांस! गोल गोल घूमो, चक्कर आ जाएंगे!",14,-26,4.5,8,()=>{const g=new THREE.Group(),t=new THREE.Group(),cs=[];g.add(t);cy(4.5,4.5,.5,0x7048e8,0,.3,0,g,24);
+for(let i=0;i<4;i++){const a=i/4*6.283,c=new THREE.Group();c.position.set(Math.cos(a)*3.4,1,Math.sin(a)*3.4);box(1.8,.8,1.8,[0xe03131,0x2f9e44,0x1c7ed6,0xfab005][i],0,.2,0,c);box(1.8,.9,.2,0x333333,0,.8,-.9,c);t.add(c);cs.push(c)}
+const seat=new THREE.Object3D();seat.position.set(0,.55,0);cs[0].add(seat);return{g,seat,up:tt=>{t.rotation.y=tt*.8;cs.forEach((c,i)=>c.rotation.y=tt*2.2+i)}}});
+addRide("Toy Train",25,"छुक छुक छुक! टॉय ट्रेन चली, बैठो बच्चों!",-6,-8,1.5,7,()=>{const g=new THREE.Group(),cs=[],tr=new THREE.Mesh(new THREE.TorusGeometry(5,.15,6,40),M(0x555555));tr.rotation.x=Math.PI/2;tr.position.y=.1;g.add(tr);
+for(let i=0;i<3;i++){const c=new THREE.Group();box(1.5,.8,2.4,i?0x2f9e44:0xe03131,0,.6,0,c);if(!i)box(1.1,1.2,1,0x222222,0,1.4,.6,c);g.add(c);cs.push(c)}
+const seat=new THREE.Object3D();seat.position.set(0,1,0);cs[1].add(seat);return{g,seat,up:t=>cs.forEach((c,i)=>{const a=t*.5-i*.55;c.position.set(Math.cos(a)*5,0,Math.sin(a)*5);c.rotation.y=-a})}});
+addRide("Haath Jhoola",20,"हाथ से चलने वाला देसी झूला! पुराना है पर मज़ा नया!",-12,12,2.5,6,()=>{const g=new THREE.Group(),w=new THREE.Group(),gs=[];w.position.y=5;g.add(w);w.add(new THREE.Mesh(new THREE.TorusGeometry(4,.15,6,32),M(0x8d5524)));box(8,.15,.15,0x8d5524,0,0,0,w);box(.15,8,.15,0x8d5524,0,0,0,w);
+for(let i=0;i<4;i++){const a=i/4*6.283,d=new THREE.Group();d.position.set(Math.cos(a)*4,Math.sin(a)*4,0);box(1.3,1,1.2,[0xe03131,0x1c7ed6,0x2f9e44,0xf59f00][i],0,-.6,0,d);w.add(d);gs.push(d)}
+const seat=new THREE.Object3D();seat.position.set(0,-.9,0);gs[0].add(seat);[-1,1].forEach(s=>box(.35,5.5,.35,0x8d5524,s*1.3,2.6,0,g).rotation.z=s*.3);
+return{g,seat,up:t=>{w.rotation.z=t*.5;gs.forEach(d=>d.rotation.z=-w.rotation.z)}}});
+function tent(c,e){const g=new THREE.Group();cy(3.5,3.5,2.4,c,0,1.2,0,g,16);cy(.1,4,2,0xffd43b,0,3.4,0,g,16);if(e){const s=emo(e);s.scale.set(3,3,1);s.position.y=6;g.add(s)}return g}
+addRide("Jadu Show",20,"जादू! जादू! खाली हाथ से कबूतर निकालूंगा!",10,26,3.5,7,()=>({g:tent(0x7048e8,"🎩"),up(){},show:"अबरा का डबरा! खाली टोपी से कबूतर निकल आया!"}));
+addRide("Bandar Tamasha",10,"डमरू बजे, बंदर नाचे! मदारी का खेल देखो!",-6,32,3.5,7,()=>({g:tent(0xe03131,"🐒"),up(){},show:"मदारी बोला, बंदर ससुराल जाएगा? बंदर ने मना कर दिया! हा हा हा!"}));
+/* funny mela announcements */
+const FUN=["मेले में एक खोया हुआ बच्चा मिला है, नाम गोलू। कृपया उसके पिताजी ऑफिस आकर ले जाएं, वरना हम उसे जलेबी खिला देंगे!","भाइयों और बहनों, ध्यान दें! अपनी जेब और अपने बच्चे दोनों संभाल के रखें!","आओ आओ मेहरबान, कद्रदान! दस रुपये में दस मज़े!","अरे भैया थोड़ा आगे बढ़ो, पीछे लाइन लगी है!","गोलगप्पे खाओ, टेंशन भगाओ! एक्स्ट्रा पानी फ्री!","ले लो ले लो! आज का ऑफर, दो के साथ एक फ्री, बस दाम दुगना!","मौत के कुएँ में आज का शो, कमज़ोर दिल वाले चाय पिएं!","ताली बजाओ ताली! नहीं तो कोई बात नहीं, पर ताली बजाओ!"];
+function funny(){if(!voice||riding||shopOpen||phase!="play"||Math.random()>AMB[VL])return;sfx("bell");setTimeout(()=>say(FUN[Math.random()*FUN.length|0],[.6,1.9,1.4][Math.random()*3|0]),500)}
+/* keyboard extras */
+(function kk(){if(keys.q)yaw+=.03;if(keys.z)yaw-=.03;requestAnimationFrame(kk)})();
+function fs(){try{document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()}catch(e){}}
+/* analytics */
+function track(ev,d){const o=Object.assign({ev,sid,name:pname,ts:Date.now()},d||{});try{const a=JSON.parse(localStorage.getItem(LS)||"[]");a.push(o);localStorage.setItem(LS,JSON.stringify(a.slice(-2000)))}catch(e){}try{DB&&DB.collection("events").add(o)}catch(e){}try{window.MELA_ENDPOINT&&fetch(window.MELA_ENDPOINT,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(o)})}catch(e){}}
+const ready=(async()=>{try{const u=await claude.use("user");window.__owner=!!(u&&await u.isOwner());DB=await claude.use("db");if(DB){const s=await DB.doc("config/ads").get();if(s.exists)Object.assign(ADCFG,s.data())}}catch(e){}track("visit")})();
+/* ads */
+function initAds(){if(!ADCFG.on||!ADCFG.client)return;const b=$("ad");b.style.display="flex";document.body.classList.add("ads");
+if(ADCFG.client){try{const s=document.createElement("script");s.async=true;s.crossOrigin="anonymous";s.src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client="+encodeURIComponent(ADCFG.client);document.head.appendChild(s);b.innerHTML='<ins class="adsbygoogle" style="display:block;width:100%;height:50px" data-ad-client="'+esc(ADCFG.client)+'" data-ad-slot="'+esc(ADCFG.slot)+'"></ins>';setTimeout(()=>{try{(window.adsbygoogle=window.adsbygoogle||[]).push({})}catch(e){}},500);track("ad_view",{type:"banner"});return}catch(e){}}
+const L=["🛍️ Mela Special: shopping par bumper offer!","🥟 Apna thela yahan advertise karo!","📱 Mela Game ka app jald aa raha hai!"];let i=0;const f=()=>{b.textContent=L[i++%3]+"  (Ad)";track("ad_view",{type:"banner"})};f();setInterval(f,15000)}
+function showAd(rw){const o=$("adv"),b=$("advb");o.style.display="flex";$("advt").textContent=rw?"Poora dekho aur ₹"+ADCFG.reward+" paao!":"Mela ka vigyapan";track("ad_view",{type:rw?"rewarded":"interstitial"});let n=5;b.disabled=true;b.textContent="Wait 5s";clearInterval(advT);advT=setInterval(()=>{n--;if(n>0)b.textContent="Wait "+n+"s";else{clearInterval(advT);b.disabled=false;b.textContent=rw?"🎁 ₹"+ADCFG.reward+" lo":"Band karo ✖"}},1000);
+b.onclick=()=>{o.style.display="none";if(rw){wal+=+ADCFG.reward;hud();sfx("coin");track("ad_reward",{price:+ADCFG.reward});toast("🎁 ₹"+ADCFG.reward+" mil gaye!")}}}
+function maybeAd(){}
+$("br").onclick=()=>{if(ADCFG.on)showAd(true);else toast("Abhi ad available nahi")};
+/* admin panel (open with #admin) */
+async function admin(){await ready;const A=$("adm");A.style.display="block";
+if(!window.__owner){A.innerHTML="<h2>🔒 Sirf owner dekh sakta hai</h2><p>Claude.ai me owner account se login karke ye link kholo.</p><button class='b' onclick=\"location.hash='';location.reload()\">⬅ Game</button>";return}
+let ev=[],src="is device ka local data";try{if(DB){const s=await DB.collection("events").orderBy("ts","desc").limit(3000).get();ev=s.docs.map(d=>d.data());if(ev.length)src="shared database"}}catch(e){}
+if(!ev.length)try{ev=JSON.parse(localStorage.getItem(LS)||"[]").reverse()}catch(e){}
+const f=n=>ev.filter(e=>e.ev==n),top=(a,k,v)=>{const m={};a.forEach(e=>{const x=e[k]||"-";m[x]=(m[x]||0)+(v?+e[v]||0:1)});return Object.entries(m).sort((x,y)=>y[1]-x[1]).slice(0,8)},
+tb=(r,h)=>"<table><tr><th>"+h[0]+"</th><th>"+h[1]+"</th></tr>"+(r.map(x=>"<tr><td>"+esc(x[0])+"</td><td>"+x[1]+"</td></tr>").join("")||"<tr><td colspan=2>Abhi data nahi</td></tr>")+"</table>",
+buys=f("buy"),rd=f("ride"),ac=ev.filter(e=>e.ev=="buy"||e.ev=="ride"),sp=buys.concat(rd),spent=sp.reduce((s,e)=>s+(+e.price||0),0),
+card=(n,v)=>"<div class='card'><b>"+v+"</b>"+n+"</div>";window.__ev=ev;
+A.innerHTML="<h1>🛠️ Mela Admin</h1><small>Data: "+src+" • "+ev.length+" events</small><div class='cards'>"+card("Visitors (sessions)",new Set(ev.map(e=>e.sid)).size)+card("Game khele",f("play").length)+card("Unique players",new Set(f("play").map(e=>e.name)).size)+card("Purchases",buys.length)+card("Jhoole rides",rd.length)+card("Total kharch ₹",spent)+card("Ad views",f("ad_view").length)+card("Reward ads",f("ad_reward").length)+card("Store sales",f("pay").length)+card("Donations ₹",f("donate").reduce((s,e)=>s+(+e.price||0),0))+card("Feedback",f("feedback").length)+card("Pakde gaye",f("caught").length)+card("Patake jale",f("burn").length)+"</div>"+
+"<h2>🏆 Sabse active players</h2>"+tb(top(ac,"name"),["Naam","Actions"])+"<h2>💰 Sabse jyada kharch</h2>"+tb(top(sp,"name","price"),["Naam","₹"])+
+"<h2>🛒 Top items</h2>"+tb(top(buys,"item"),["Item","Bika"])+"<h2>🏪 Top dukaane/thele</h2>"+tb(top(buys,"shop"),["Dukaan","Sales"])+"<h2>🎡 Top jhoole</h2>"+tb(top(rd,"item"),["Jhoola","Rides"])+"<h2>👤 Ladka / Ladki</h2>"+tb(top(f("play"),"gender"),["Type","Players"])+
+"<h2>⚙️ Ads control</h2><div>Ads <select id='c1'><option value='1'>ON</option><option value='0'>OFF</option></select> Reward ₹<input id='c2' type='number' value='"+(+ADCFG.reward||200)+"' style='width:80px'><br>AdSense ID <input id='c4' value='"+esc(ADCFG.client||"")+"' placeholder='ca-pub-xxxx'> Slot <input id='c5' value='"+esc(ADCFG.slot||"")+"' style='width:110px'> <button class='b' onclick='saveCfg()'>Save</button></div>"+
+"<h2>💬 Feedback</h2>"+tb(f("feedback").slice(0,10).map(e=>[(e.name||"")+": "+(e.item||""),new Date(e.ts).toLocaleDateString()]),["Feedback","Date"])+"<h2>🛍️ Store sales</h2>"+tb(top(f("pay"),"item"),["Item","Sales"])+"<h2>🕒 Recent</h2>"+tb(ev.slice(0,15).map(e=>[new Date(e.ts).toLocaleTimeString()+" "+e.ev+" "+(e.name||""),e.item||""]),["Event","Item"])+
+"<p><button class='b' onclick='dlCsv()'>⬇ CSV</button><button class='b' onclick='admin()'>🔄 Refresh</button><button class='b' onclick='clr()'>🗑 Local data saaf</button><button class='b' onclick=\"location.hash='';location.reload()\">⬅ Game</button></p>";$("c1").value=ADCFG.on?"1":"0"}
+async function saveCfg(){ADCFG.on=$("c1").value=="1";ADCFG.reward=+$("c2").value||200;ADCFG.client=$("c4").value.trim();ADCFG.slot=$("c5").value.trim();try{localStorage.setItem("mela_cfg",JSON.stringify(ADCFG))}catch(e){}try{if(DB){await DB.doc("config/ads").set(ADCFG);toast("Save ho gaya ✅")}else toast("Sirf is device par save hua")}catch(e){toast("Save nahi hua")}}
+async function dlCsv(){const q=v=>'"'+String(v==null?"":v).replace(/"/g,'""')+'"',csv="time,event,session,name,item,shop,price,type,gender\n"+(window.__ev||[]).map(x=>[new Date(x.ts).toISOString(),x.ev,x.sid,x.name,x.item,x.shop,x.price,x.type,x.gender].map(q).join(",")).join("\n");try{const d=await claude.use("downloads");d?await d.save({filename:"mela-events.csv",data:csv}):toast("Download available nahi")}catch(e){}}
+function clr(){try{localStorage.removeItem(LS)}catch(e){}admin()}
+if(location.hash=="#admin")admin();
+/* ===== v4: bike intro, parking, parents chase, store, camera modes, Diwali ===== */
+let phase="menu",camMode=0,pitch=0,dgy=null,overT=0,ct=0,last2=0,shout=0,siren=0,pt=0,BK,UID,ENT={},CK={};
+const look={},chase={on:false,slow:0,stun:0,next:40,far:0,mode:"hunt",goto:null,delay:-1},EM=[],FW=[],api=()=>window.MELA_API||"";
+try{UID=localStorage.getItem("mela_uid");if(!UID){UID="g"+Math.random().toString(36).slice(2,12);localStorage.setItem("mela_uid",UID)}}catch(e){UID="g"+Math.random().toString(36).slice(2,12)}
+/* --- world: outside area, road, gate, parking, diwali decor --- */
+function mkBike(c){const g=new THREE.Group(),bm=M(c);g.userData.bm=bm;g.userData.w=[];box(.45,.6,2,bm,0,.85,0,g);box(.55,.4,.8,bm,0,1.3,.25,g);box(.4,.15,1,0x222222,0,1.15,-.35,g);box(1,.08,.08,0x333333,0,1.55,.8,g);box(.1,.7,.1,0x888888,0,.7,.9,g);
+[.9,-.9].forEach(z=>{const w=new THREE.Group();w.position.set(0,.45,z);cy(.45,.45,.18,0x111111,0,0,0,w,14).rotation.z=Math.PI/2;box(.05,.9,.05,0x999999,0,0,0,w);g.add(w);g.userData.w.push(w)});return g}
+box(140,.03,126,0x7a6f5e,0,.02,189,scene);box(18,.05,126,0x3a3a44,0,.04,189,scene);for(let z=128;z<250;z+=8)box(.5,.06,3.5,0xffffff,0,.08,z,scene);
+box(36,.05,46,0x4a4a55,40,.06,205,scene);
+for(let i=0;i<6;i++){box(.15,.07,6,0xffffff,24+6*i,.1,214,scene);if(i<5&&i!=1){const b=mkBike([0x1c7ed6,0x2f9e44,0xfab005,0x111111,0xf06595][i]);b.position.set(27+6*i,0,216);b.rotation.y=Math.PI;scene.add(b)}}
+const ps=new THREE.Sprite(new THREE.SpriteMaterial({map:sign("PARKING Rs 20",0x1c7ed6)}));ps.scale.set(10,2.5,1);ps.position.set(14,7,206);scene.add(ps);cy(.15,.15,6,0x555555,14,3,206,scene,6);
+[-17,17].forEach(x=>{box(4,16,4,0xd9480f,x,8,135,scene);box(5.4,1.2,5.4,0xffd43b,x,16.4,135,scene);box(4.8,1,4.8,0xffd43b,x,.5,135,scene);const d=new THREE.Mesh(new THREE.SphereGeometry(2,12,10),M(0xffd43b));d.position.set(x,18.4,135);scene.add(d)});
+box(40,3.4,3,0xd9480f,0,15,135,scene);box(40,.6,3.2,0xffd43b,0,13.1,135,scene);box(40,.6,3.2,0xffd43b,0,16.9,135,scene);
+for(let i=0;i<19;i++){const m=new THREE.Mesh(new THREE.SphereGeometry(.45,6,6),M(i%2?0xff9f1c:0xffd43b));m.position.set(-18+i*2,12.2-Math.sin(i/18*Math.PI)*1.4,133.2);scene.add(m)}
+[0,Math.PI].forEach(a=>{const z=135+(a?-1.7:1.7);[["FUNNYMELA - HAPPY DIWALI",0xc92a2a,30,7.5,21]].forEach(q=>{const m=new THREE.Mesh(new THREE.PlaneGeometry(q[2],q[3]),new THREE.MeshBasicMaterial({map:sign(q[0],q[1])}));m.position.set(0,q[4],z);m.rotation.y=a;scene.add(m)})});
+const dm=new THREE.MeshBasicMaterial({color:0xffa94d}),diya=(x,z)=>{const m=new THREE.Mesh(new THREE.SphereGeometry(.3,6,6),dm);m.position.set(x,.4,z);scene.add(m);cy(.35,.2,.2,0x8d3b12,x,.1,z,scene,8)};
+
+[[7,0xe03131],[6,0xfab005],[5,0x2f9e44],[4,0x1c7ed6],[3,0xf06595],[2,0xffffff],[1,0xe8590c]].forEach((q,i)=>cy(q[0],q[0],.02,q[1],0,.03+i*.012,12,scene,28));
+for(let i=0;i<16;i++){const a=i/16*6.283;diya(Math.cos(a)*8.4,12+Math.sin(a)*8.4)}
+const hd=new THREE.Sprite(new THREE.SpriteMaterial({map:sign("Happy Diwali!",0xe8590c),fog:false}));hd.scale.set(22,5.5,1);hd.position.set(0,15,14);scene.add(hd);
+box(104,.03,7,0xcf9b5a,0,.03,88,scene);
+/* patake (firecracker) stalls outside the gate */
+function stall(s,x,z,ry){const g=new THREE.Group();g.position.set(x,0,z);g.rotation.y=ry;scene.add(g);s.x=x;s.z=z;circ.push({x,z,r:3.4});box(6,4.2,.3,0xfff1d6,0,2.1,-1.4,g);box(5.6,1.1,1.4,s[2],0,.55,1.3,g);box(6.6,.25,3.8,s[2],0,4.5,.5,g).rotation.x=.18;box(.3,4.6,.3,0x6d4c41,-3,2.3,2,g);box(.3,4.6,.3,0x6d4c41,3,2.3,2,g);
+const sg=new THREE.Mesh(new THREE.PlaneGeometry(5.6,1.4),new THREE.MeshBasicMaterial({map:sign(s[1],s[2])}));sg.position.set(0,5.7,2.2);g.add(sg);s[4].forEach((it,k)=>{const e=emo(it[0]);e.scale.set(1.3,1.3,1);e.position.set((k-(s[4].length-1)/2)*1.7,2,1.4);g.add(e)});const k=person(0xf08c00,0,0xc68642);k.position.set(0,0,-.3);g.add(k);ALL.push(s)}
+[["✨","Phuljhadi Ghar",0xf59f00,"फुलझड़ी ले लो! दिवाली की रौनक!",[["✨","Phuljhadi x3",30,"c","phul",3],["🌟","Phuljhadi x6",50,"c","phul",6]]],
+["⛲","Anar Dukaan",0xe03131,"अनार ले लो अनार! ऊँचा ऊँचा फव्वारा!",[["⛲","Anar x2",50,"c","anar",2],["🎆","Anar x4",90,"c","anar",4]]],
+["🌀","Chakri Dukaan",0x7048e8,"चकरी ले लो! ज़मीन पर नाचेगी चकरी!",[["🌀","Chakri x2",40,"c","chak",2]]],
+["🚀","Rocket Dukaan",0x1c7ed6,"रॉकेट ले लो! सीधा आसमान में!",[["🚀","Rocket x2",70,"c","rock",2],["🎇","Rocket x4",130,"c","rock",4]]]].forEach((s,i)=>stall(s,-24,150+i*16,Math.PI/2));
+/* more shows */
+addRide("Kushti Akhara",15,"कुश्ती! दंगल का मज़ा लो, पहलवान को चुनौती दो!",0,0,3.5,7,()=>({g:tent(0x8d5524,"🤼"),up(){},show:"पहलवान बोला, जो मुझे हराएगा उसे इनाम मिलेगा! तुम पहले ही दाँव में चित हो गए!"}));
+addRide("Nautanki Manch",15,"नौटंकी शुरू! राजा, मंत्री और जोकर का तमाशा!",0,0,3.5,7,()=>({g:tent(0xc2255c,"🎭"),up(){},show:"राजा बोला, मंत्री जी, मेला कितना बड़ा है? मंत्री बोला, इतना कि मम्मी पापा भी ढूंढते रह जाएं!"}));
+/* --- fireworks --- */
+const FN=1800,fg=new THREE.BufferGeometry(),fp=new Float32Array(FN*3),fc=new Float32Array(FN*3);fg.setAttribute("position",new THREE.BufferAttribute(fp,3));fg.setAttribute("color",new THREE.BufferAttribute(fc,3));
+const fpts=new THREE.Points(fg,new THREE.PointsMaterial({size:.55,vertexColors:true,transparent:true,fog:false}));fpts.frustumCulled=false;scene.add(fpts);
+function spark(x,y,z,vx,vy,vz,c,l){if(FW.length<FN)FW.push({x,y,z,vx,vy,vz,c:new THREE.Color(c),l,a:0})}
+function fwStep(dt){for(let i=EM.length-1;i>=0;i--){const e=EM[i];e.t+=dt;e.f(dt,e.t);if(e.t>e.d){e.end&&e.end();EM.splice(i,1)}}
+for(let i=FW.length-1;i>=0;i--){const s=FW[i];s.a+=dt;if(s.a>s.l){FW.splice(i,1);continue}s.vy-=9*dt;s.x+=s.vx*dt;s.y+=s.vy*dt;s.z+=s.vz*dt}
+FW.forEach((s,i)=>{const k=1-s.a/s.l;fp[i*3]=s.x;fp[i*3+1]=s.y;fp[i*3+2]=s.z;fc[i*3]=s.c.r*k;fc[i*3+1]=s.c.g*k;fc[i*3+2]=s.c.b*k});fg.setDrawRange(0,FW.length);fg.attributes.position.needsUpdate=true;fg.attributes.color.needsUpdate=true}
+const CKN={phul:["✨","Phuljhadi"],anar:["⛲","Anar"],chak:["🌀","Chakri"],rock:["🚀","Rocket"],ladi:["🧨","Ladi"],bomb:["💥","Sutli Bomb"],sky:["🎇","Sky Shot"]},WC=[0xffd43b,0xff922b,0xff6b6b,0xffffff];
+function openCk(){$("ckbox").innerHTML="<h2>🎆 Patake jalao</h2>"+Object.keys(CKN).map(k=>"<div class='it'><span class='ie'>"+CKN[k][0]+"</span><b>"+CKN[k][1]+" x"+(CK[k]||0)+"</b><button class='b' onclick=\"burn('"+k+"')\">Jalao</button></div>").join("")+"<p><button class='b' onclick=\"$('ck').style.display='none'\">Band</button></p>";$("ck").style.display="flex"}
+function burn(k){if(!(CK[k]>0))return toast("Patake khatam! Dukaan se lo");CK[k]--;$("ck").style.display="none";track("burn",{item:k});const ry=P.rotation.y,ex=P.position.x+Math.sin(ry)*3.5,ez=P.position.z+Math.cos(ry)*3.5,px=P.position.x+Math.sin(ry)*.9,pz=P.position.z+Math.cos(ry)*.9;
+if(k=="phul")EM.push({t:0,d:7,f:()=>{for(let i=0;i<7;i++){const a=Math.random()*6.283,s=2+Math.random()*3;spark(px,2,pz,Math.cos(a)*s,Math.random()*3+1,Math.sin(a)*s,WC[i%4],.5)}if(Math.random()<.3)noise(.08,.05,6000)}});
+if(k=="anar"){const m=cy(.3,.45,.9,0xc92a2a,ex,.45,ez,scene,10);noise(.4,.1,2500);EM.push({t:0,d:5,f:()=>{for(let i=0;i<14;i++)spark(ex,.9,ez,(Math.random()-.5)*3,9+Math.random()*5,(Math.random()-.5)*3,WC[i%4],1.3);if(Math.random()<.3)noise(.1,.1,3500)},end:()=>scene.remove(m)})}
+if(k=="chak"){const m=cy(.6,.6,.08,0xfab005,ex,.1,ez,scene,16);EM.push({t:0,d:5,f:(dt,t)=>{const a=t*14;m.rotation.y=a;for(let i=0;i<4;i++)spark(ex+Math.cos(a)*.5,.25,ez+Math.sin(a)*.5,-Math.sin(a)*5,1.5+Math.random(),Math.cos(a)*5,0xffa94d,.6);if(Math.random()<.3)noise(.08,.08,4000)},end:()=>scene.remove(m)})}
+if(k=="rock"){const m=cy(.05,.05,1.2,0x6d4c41,ex,.6,ez,scene,6);tone(500,1.4,"sine",.1,1600);EM.push({t:0,d:1.5,f:(dt,t)=>{const y=.6+t/1.5*30;m.position.y=y;for(let i=0;i<3;i++)spark(ex,y-.5,ez,(Math.random()-.5)*1.5,-2-Math.random()*2,(Math.random()-.5)*1.5,0xffa94d,.6)},end:()=>{const y=30.6,cs=[0xff6b6b,0xffd43b,0x69db7c,0x74c0fc,0xf783ac],c1=cs[Math.random()*5|0],c2=cs[Math.random()*5|0];scene.remove(m);noise(.8,.5,150);tone(70,.5,"sine",.5,30);for(let i=0;i<160;i++){const a=Math.random()*6.283,b=Math.acos(Math.random()*2-1),s=10+Math.random()*9;spark(ex,y,ez,Math.sin(b)*Math.cos(a)*s,Math.cos(b)*s,Math.sin(b)*Math.sin(a)*s,i%2?c1:c2,1.6+Math.random()*.8)}}})}}
+/* --- bike intro, parking --- */
+function setupIntro(g){PG=!g;scene.remove(F[0]);F[0]=g?person(0x1c7ed6,0,0xd9a066,0x151515):person(0xf06595,1,0xe0ac69,0x2b1608);scene.add(F[0]);BK=mkBike(BKCOL);BK.position.set(0,0,238);BK.rotation.y=Math.PI;scene.add(BK);BK.add(P);BK.add(F[0]);P.position.set(0,.3,.25);F[0].position.set(0,.3,-.65);
+[P,F[0]].forEach(p=>{p.rotation.set(0,0,0);p.userData.l.rotation.x=p.userData.r.rotation.x=-1.1});P.userData.a.forEach(a=>a.rotation.x=-1.1);F[0].userData.a.forEach(a=>a.rotation.x=-.5);F[0].visible=true;phase="ride";jx=jz=0}
+function payPark(){if(wal<20){toast("Parking ke ₹20 nahi hain!");return}wal-=20;hud();sfx("coin");track("park",{price:20});phase="parking";pt=0;$("act").style.display="none"}
+function camBehind(o,dt){cam.position.lerp(new V(o.position.x,5.5,o.position.z+10),1-Math.exp(-dt*4));cam.lookAt(o.position.x,1.5,o.position.z-5)}
+function stepPhase(dt){const ac=$("act");
+if(phase=="ride"){const ix=Math.max(-1,Math.min(1,jx+(keys.d||keys.arrowright?1:0)-(keys.a||keys.arrowleft?1:0)));BK.position.x=Math.max(-7,Math.min(7,BK.position.x+ix*7*dt));BK.position.z-=14*dt;BK.rotation.y=Math.PI-ix*.3;BK.userData.w.forEach(w=>w.rotation.x-=dt*14);tone(70+Math.random()*10,.08,"sawtooth",.04);
+if(BK.position.z<=206){phase="park";BK.rotation.y=Math.PI;ac.style.display="block";ac.textContent="🅿️ Parking ₹20 do";say("पार्किंग बीस रुपये! गाड़ी यहाँ लगाओ!")}camBehind(BK,dt)}
+else if(phase=="park")camBehind(BK,dt);
+else if(phase=="parking"){pt+=dt;BK.position.x+=(34-BK.position.x)*Math.min(1,dt*3);BK.position.z+=(200-BK.position.z)*Math.min(1,dt*3);BK.rotation.y=Math.PI;
+if(pt>1.5){const bx=BK.position.x,bz=BK.position.z,ry=Math.atan2(-bx,-bz);scene.attach(P);scene.attach(F[0]);P.position.set(bx-1.7,0,bz);F[0].position.set(bx-2.8,0,bz-.4);P.rotation.set(0,ry,0);F[0].rotation.set(0,ry,0);phase="play";ct=0;document.body.classList.remove("intro");toast("🎪 Mela me swagat! Dost Chintu se bachna, wo Mummy-Papa ko bata dega 😅");say("चलो मेले में! पर मम्मी पापा को पता न चले!")}camBehind(BK,dt)}
+else if(phase=="over")beatUp(dt);
+R.render(scene,cam)}
+/* --- parents chase, beating, game over --- */
+const PAR=[person(0xf1f3f5,0,0xb98055,0x9e9e9e),person(0xc2255c,1,0xc68642,0x1a1a1a)];PAR[0].scale.setScalar(1.08);PAR.forEach(p=>{p.visible=false;scene.add(p)});
+const LINES=["रुक जा बेटा! कहाँ भाग रहा है!","आज तेरी खैर नहीं!","बिना बताए मेले में आया है!","पकड़ो पकड़ो इसे!"];
+function useItem(id){ENT[id]=Math.max(0,(ENT[id]|0)-1);if(api())fetch(api()+"/use",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({uid:UID,item:id})}).catch(()=>{});else try{localStorage.setItem("mela_ent",JSON.stringify(ENT))}catch(e){}}
+function caught(){if(ENT.shield>0){useItem("shield");chase.stun=5;PAR.forEach((p,i)=>p.position.set(P.position.x+(i?-14:14),0,P.position.z-8));toast("🛡️ Shield ne bacha liya!");sfx("coin");return}gameOver()}
+function gameOver(){phase="over";overT=0;chase.on=false;P.visible=true;["warn","act","bn"].forEach(i=>$(i).style.display="none");const f=PAR[0],m=PAR[1];f.position.set(P.position.x+1.3,0,P.position.z);m.position.set(P.position.x-1.3,0,P.position.z);f.rotation.y=-Math.PI/2;m.rotation.y=Math.PI/2;const s=emo("😵");s.scale.set(1.8,1.8,1);s.position.set(0,3.6,0);P.add(s);say("पकड़ लिया! घर चल, तेरी आज खैर नहीं!",.8);track("caught",{item:Math.round(ct)+"s"})}
+function beatUp(dt){overT+=dt;const p=P.position;cam.position.set(p.x+Math.sin(overT*.6)*6,3.2,p.z+Math.cos(overT*.6)*6);cam.lookAt(p.x,1.2,p.z);PAR[0].userData.a[1].rotation.x=-2.3+Math.sin(overT*16);PAR[1].userData.a[0].rotation.x=-2.3+Math.sin(overT*16+2);
+if(Math.floor(overT*3)!=Math.floor((overT-dt)*3)){noise(.12,.5,1800);tone(160,.1,"square",.2,60);if(Math.random()<.3)say(["ले और ले!","अब बोलेगा बिना बताए जाएगा?","चल घर!"][Math.random()*3|0],[.8,1.4][Math.random()*2|0])}
+P.rotation.z=overT>.8?Math.min(1.5,(overT-.8)*2):Math.sin(overT*30)*.12;if(overT>3.2)$("over").style.display="flex"}
+(function ch(ms){requestAnimationFrame(ch);const dt=Math.min((ms-last2)/1000||0,.05);last2=ms;
+const open=shopOpen||UIOPEN();
+if(phase=="play"){const out=P.position.z>138&&Object.values(CK).reduce((a,b)=>a+b,0)>0;$("bn").style.display=out&&!riding&&!open?"block":"none"}
+if(phase!="play"||open)return;ct+=dt;if(chase.on){const _prevS=Math.floor(MC.surv||0);MC.surv=(MC.surv||0)+dt;if(Math.floor(MC.surv)!==_prevS)mCheck()}
+if(chase.delay>0&&(chase.delay-=dt)<=0&&!chase.on)spawnPar("goto");if(!chase.on&&ct>chase.next)spawnPar("hunt");
+if(!chase.on)return;chase.slow=Math.max(0,chase.slow-dt);chase.stun=Math.max(0,chase.stun-dt);
+let tx=riding?riding.r.x:P.position.x,tz=riding?riding.r.z:P.position.z;const dpl=Math.min(...PAR.map(p=>Math.hypot(P.position.x-p.position.x,P.position.z-p.position.z)));if(chase.mode=="goto"){if(dpl<24||(chase.goto&&Math.hypot(chase.goto.x-PAR[0].position.x,chase.goto.z-PAR[0].position.z)<3))chase.mode="hunt";else if(chase.goto){tx=chase.goto.x;tz=chase.goto.z}}let md=dpl;
+PAR.forEach((p,i)=>{const dx=tx-p.position.x,dz=tz-p.position.z,d=Math.hypot(dx,dz);const sp=(i?4.3:4.8)*PSPD[DIF]*(ENT.vip?.85:1)*(chase.slow>0?.45:1)*(chase.stun>0?0:1);if(d>1.5){p.position.x+=dx/d*sp*dt;p.position.z+=dz/d*sp*dt;p.rotation.y=Math.atan2(dx,dz)}walk(p,sp>0,T+i);p.userData.a.forEach(a=>a.rotation.x=-2.2+Math.sin(T*8)*.3)});
+const w=$("warn");w.style.display="block";w.textContent="😡 Mummy-Papa "+Math.round(md)+"m"+(ENT.slow>0?" • tap: 😴 Slow ("+ENT.slow+")":"");
+if(md<22&&(siren-=dt)<0){siren=1;tone(800,.25,"square",.06,500)}if((shout-=dt)<0){shout=9;if(md<60)say(LINES[Math.random()*4|0],[.85,1.5][Math.random()*2|0])}
+if(!riding&&md<1.5)caught();chase.far=md>40?chase.far+dt:0;if(chase.far>3)lostPar()})();
+$("warn").onclick=()=>{if(ENT.slow>0&&chase.on){useItem("slow");chase.slow=15;toast("😴 Parents slow ho gaye 15s")}};
+/* --- store + payments (Razorpay via your backend) --- */
+const CAT=[
+{id:"skin_raja",t:"skin",n:"👑 Raja Skin",d:"Shahi kurta + pagdi",p:49,c:0xf59f00,h:0xe03131},
+{id:"skin_hero",t:"skin",n:"🦸 Hero Skin",d:"Hero jaisa look",p:49,c:0x1971c2,h:0xe03131},
+{id:"skin_cop",t:"skin",n:"👮 Police Skin",d:"Khaki vardi + topi",p:39,c:0x8d6e3f,h:0x1d3557},
+{id:"bike_gold",t:"bike",n:"✨ Golden Bike",d:"Sone jaisi bike",p:59,c:0xffd43b},
+{id:"bike_fire",t:"bike",n:"🔥 Fire Bike",d:"Laal angaara bike",p:79,c:0xe03131},
+{id:"gf_lehnga",t:"gf",n:"👗 Partner Lehnga",d:"Partner ki shaandar dress",p:39,c:0xd6336c},
+{id:"shield",t:"cons",n:"🛡️ Pitai Shield x3",d:"Mummy-Papa pakde to bachaye",p:29,q:3},
+{id:"slow",t:"cons",n:"😴 Parents Slow x5",d:"Parents 15s dheere",p:19,q:5},
+{id:"coins1",t:"coins",n:"🪙 ₹2000 Mela Coins",d:"Shopping ke liye",p:49,v:2000},
+{id:"coins2",t:"coins",n:"🪙 ₹6000 Mela Coins",d:"Best value",p:99,v:6000},
+{id:"fw",t:"coins",n:"🎆 Diwali Patake Box",d:"Har type ke 4 patake",p:39,fw:1},
+{id:"noads",t:"pass",n:"🚫 Ad-Free Pass",d:"Banner ad hatao",p:99},
+{id:"vip",t:"pass",n:"👑 Mela VIP",d:"+₹1500 start, parents 15% slow",p:149}];
+function applyLook(){if(!P)return;const g=t=>CAT.find(c=>c.id==look[t]&&ENT[c.id]>0),s=g("skin"),q=g("gf"),b=g("bike");if(s){P.userData.shirt.color.setHex(s.c);P.userData.hat.visible=true;P.userData.hat.material.color.setHex(s.h)}if(q)F[0].userData.shirt.color.setHex(q.c);if(b&&BK)BK.userData.bm.color.setHex(b.c)}
+function applyEnt(){if(ENT.noads){$("ad").style.display="none";document.body.classList.remove("ads")}applyLook()}
+(async()=>{if(api()){try{ENT=(await(await fetch(api()+"/entitlements?uid="+UID)).json()).ent||{}}catch(e){}}else try{ENT=JSON.parse(localStorage.getItem("mela_ent")||"{}")}catch(e){}try{Object.assign(look,JSON.parse(localStorage.getItem("mela_look")||"{}"))}catch(e){}})();
+function grant(c,mode){if(c.t=="coins"){if(c.v){wal+=c.v;hud()}if(c.fw)["phul","anar","chak","rock"].forEach(k=>CK[k]=(CK[k]|0)+4);if(c.st&&mode=="demo"){ENT.shield=(ENT.shield|0)+3;ENT.slow=(ENT.slow|0)+5}}else if(mode=="demo")ENT[c.id]=(ENT[c.id]|0)+(c.q||1);if(mode=="demo")try{localStorage.setItem("mela_ent",JSON.stringify(ENT))}catch(e){}applyEnt();track("pay",{item:c.id,price:c.p,mode});toast("✅ "+c.n+" mil gaya!");openStore()}
+async function pay(id){const c=CAT.find(x=>x.id==id);if(!c)return;
+if(!api()){askOk("Demo mode: asli payment abhi connect nahi hai. Test ke liye free unlock karein?",()=>grant(c,"demo"));return}
+try{const H={"Content-Type":"application/json"},o=await(await fetch(api()+"/order",{method:"POST",headers:H,body:JSON.stringify({uid:UID,item:id})})).json();if(!o.order_id)throw 0;
+await new Promise((ok,no)=>{if(window.Razorpay)return ok();const s=document.createElement("script");s.src="https://checkout.razorpay.com/v1/checkout.js";s.onload=ok;s.onerror=no;document.head.appendChild(s)});
+new Razorpay({key:o.key,order_id:o.order_id,amount:o.amount,currency:"INR",name:"FunnyMela",description:c.n,theme:{color:"#e8590c"},handler:async r=>{const v=await(await fetch(api()+"/verify",{method:"POST",headers:H,body:JSON.stringify(r)})).json();if(v.ok){if(v.ent)ENT=v.ent;if(c.t=="coins")grant(c,"razorpay");else{applyEnt();track("pay",{item:id,price:c.p,mode:"razorpay"});toast("✅ Payment successful");openStore()}}else toast("Payment verify nahi hua")}}).open()}catch(e){toast("Payment shuru nahi hua, baad me try karo")}}
+function equip(id){const c=CAT.find(x=>x.id==id);look[c.t]=id;try{localStorage.setItem("mela_look",JSON.stringify(look))}catch(e){}applyLook();openStore()}
+function openStore(){const sec={skin:"👕 Skins",bike:"🏍️ Bike",gf:"👗 Partner",cons:"⚡ Power-ups",coins:"🪙 Packs",pass:"🎟️ Pass"};let h="<h2>🛍️ Mela Store</h2><small>"+(api()?"Razorpay secure payment":"⚠️ Demo mode (free test unlock)")+"</small>";
+for(const k in sec){h+="<h3 style='margin:12px 0 4px'>"+sec[k]+"</h3>";CAT.filter(c=>c.t==k).forEach(c=>{const o=ENT[c.id]|0,own=["skin","bike","gf"].includes(k)&&o;h+="<div class='it'><div style='flex:1;text-align:left'><b>"+c.n+"</b><br><small>"+c.d+(k=="cons"&&o?" • paas: "+o:"")+"</small></div>"+(own?(look[c.t]==c.id?"<b>✔ Pehna</b>":"<button class='b' onclick=\"equip('"+c.id+"')\">Pehno</button>"):(k=="pass"&&o)?"<b>✔ Active</b>":"<button class='b' onclick=\"pay('"+c.id+"')\">₹"+c.p+"</button>")+"</div>"})}
+$("stbox").innerHTML=h+"<p><button class='b' onclick=\"$('store').style.display='none'\">Band karo</button></p>";$("store").style.display="flex"}
+/* --- settings, feedback, camera --- */
+function openSett(){$("sett").style.display="flex"}
+function sendFb(){const t=$("fbt").value.trim();if(!t)return toast("Pehle kuch likho");track("feedback",{item:t.slice(0,300)});$("fbt").value="";toast("Shukriya! Feedback mil gaya 🙏");$("sett").style.display="none"}
+function setCam(m){camMode=m;pitch=m==1?-.08:0;toast(["📷 3rd Person","👁️ First Person (aankhon se)","🦅 Bird View"][m]);if(m!=1&&P)P.visible=true}
+function camNext(){setCam((camMode+1)%3)}
+$("bc").onclick=camNext;$("bs").onclick=openStore;$("bg").onclick=openSett;$("bn").onclick=openCk;
+/* ===== v5: real cracker sounds, ride sounds, ghost+monkey scenes, friend call, donation pole, missions, policy pages ===== */
+let PG=true;const SITE={name:"FunnyMela",owner:"[Aapka Naam]",email:"support@yourdomain.com",phone:"+91-XXXXXXXXXX",addr:"[Aapka Pata, India]"};
+const _tr=track;track=(ev,d)=>{_tr(ev,d);try{missions(ev,d||{})}catch(e){}};
+/* --- realistic cracker sounds --- */
+function bang(v,s){if(SFXOFF)return;try{const c=A(),n=c.sampleRate*(s?.4:1.4),b=c.createBuffer(1,n,c.sampleRate),a=b.getChannelData(0);for(let i=0;i<n;i++)a[i]=(Math.random()*2-1)*Math.exp(-i/(c.sampleRate*(s?.07:.25)));const o=c.createBufferSource(),g=c.createGain(),f=c.createBiquadFilter();f.type="lowpass";f.frequency.setValueAtTime(5000,c.currentTime);f.frequency.exponentialRampToValueAtTime(180,c.currentTime+(s?.3:.9));g.gain.value=v||.8;o.buffer=b;o.connect(f).connect(g).connect(c.destination);o.start();tone(s?110:70,s?.2:.5,"sine",(v||.8)*.9,28);if(!s)setTimeout(()=>tone(50,.7,"sine",(v||.8)*.3,25),180)}catch(e){}}
+function crackle(n,v){for(let i=0;i<n;i++)setTimeout(()=>noise(.03,v||.12,1500+Math.random()*3000),i*(30+Math.random()*70))}
+function hiss(d,v,hp){if(SFXOFF)return;try{const c=A(),n=c.sampleRate*d,b=c.createBuffer(1,n,c.sampleRate),a=b.getChannelData(0);for(let i=0;i<n;i++)a[i]=Math.random()*2-1;const o=c.createBufferSource(),g=c.createGain(),f=c.createBiquadFilter();f.type="bandpass";f.frequency.value=hp||5000;g.gain.setValueAtTime(v,c.currentTime);g.gain.linearRampToValueAtTime(.0001,c.currentTime+d);o.buffer=b;o.connect(f).connect(g).connect(c.destination);o.start()}catch(e){}}
+function rocket(ex,ez,ring,big){const m=cy(.05,.05,1.2,0x6d4c41,ex,.6,ez,scene,6);tone(450,1.4,"sine",.07,2300);hiss(1.5,.12,3000);
+EM.push({t:0,d:1.5,f:(dt,t)=>{const y=.6+t/1.5*30;m.position.y=y;for(let i=0;i<3;i++)spark(ex,y-.5,ez,(Math.random()-.5)*1.5,-2-Math.random()*2,(Math.random()-.5)*1.5,0xffa94d,.6)},end:()=>{scene.remove(m);const y=30.6,cs=[0xff6b6b,0xffd43b,0x69db7c,0x74c0fc,0xf783ac],c1=cs[Math.random()*5|0],c2=cs[Math.random()*5|0];bang(.9);crackle(10,.15);
+for(let i=0;i<(big?220:160);i++){const a=Math.random()*6.283,b=ring?Math.PI/2+(Math.random()-.5)*.15:Math.acos(Math.random()*2-1),s=10+Math.random()*9;spark(ex,y,ez,Math.sin(b)*Math.cos(a)*s,Math.cos(b)*s,Math.sin(b)*Math.sin(a)*s,i%2?c1:c2,1.6+Math.random()*.8)}}})}
+function burn(k){if(!(CK[k]>0))return toast("Patake khatam! Dukaan se lo");CK[k]--;$("ck").style.display="none";track("burn",{item:k});const ry=P.rotation.y,ex=P.position.x+Math.sin(ry)*3.5,ez=P.position.z+Math.cos(ry)*3.5,px=P.position.x+Math.sin(ry)*.9,pz=P.position.z+Math.cos(ry)*.9;
+const tgt=nearShop(ex,ez,10);if(tgt&&!blastBusy)setTimeout(()=>blast(tgt),k=="rock"||k=="sky"?2000:1200);
+if(k=="phul"){hiss(7,.06,6000);EM.push({t:0,d:7,f:()=>{for(let i=0;i<7;i++){const a=Math.random()*6.283,s=2+Math.random()*3;spark(px,2,pz,Math.cos(a)*s,Math.random()*3+1,Math.sin(a)*s,WC[i%4],.5)}if(Math.random()<.25)noise(.03,.06,6000)}})}
+if(k=="anar"){const m=cy(.3,.45,.9,0xc92a2a,ex,.45,ez,scene,10);hiss(5,.12,2500);tone(90,.6,"sawtooth",.06,200);EM.push({t:0,d:5,f:()=>{for(let i=0;i<14;i++)spark(ex,.9,ez,(Math.random()-.5)*3,9+Math.random()*5,(Math.random()-.5)*3,WC[i%4],1.3);if(Math.random()<.3)noise(.04,.1,3500)},end:()=>scene.remove(m)})}
+if(k=="chak"){const m=cy(.6,.6,.08,0xfab005,ex,.1,ez,scene,16);hiss(5,.1,4000);tone(300,5,"sawtooth",.025,900);EM.push({t:0,d:5,f:(dt,t)=>{const a=t*14;m.rotation.y=a;for(let i=0;i<4;i++)spark(ex+Math.cos(a)*.5,.25,ez+Math.sin(a)*.5,-Math.sin(a)*5,1.5+Math.random(),Math.cos(a)*5,0xffa94d,.6)},end:()=>scene.remove(m)})}
+if(k=="rock")rocket(ex,ez,false,false);
+if(k=="sky")for(let i=0;i<3;i++)setTimeout(()=>rocket(ex+(i-1)*4,ez,i==1,true),i*900);
+if(k=="ladi"){let n=0,acc=0;EM.push({t:0,d:4.2,f:dt=>{acc+=dt;if(acc>.17&&n<22){acc=0;n++;const x=ex+(Math.random()-.5)*.6,z=ez+n*.35;bang(.35,1);for(let i=0;i<14;i++){const a=Math.random()*6.283,s=2+Math.random()*3;spark(x,.4,z,Math.cos(a)*s,2+Math.random()*3,Math.sin(a)*s,i%2?0xff6b6b:0xffd43b,.5)}}}})}
+if(k=="bomb"){const m=cy(.15,.15,.5,0xc92a2a,ex,.25,ez,scene,8);hiss(1.2,.08,6000);EM.push({t:0,d:1.2,f:()=>{spark(ex,.6,ez,(Math.random()-.5),2+Math.random()*2,(Math.random()-.5),0xffd43b,.3)},end:()=>{scene.remove(m);bang(1.2);const rg=new THREE.Mesh(new THREE.RingGeometry(.5,.9,32),new THREE.MeshBasicMaterial({color:0xffe08a,transparent:true,side:THREE.DoubleSide}));rg.rotation.x=-Math.PI/2;rg.position.set(ex,.15,ez);scene.add(rg);EM.push({t:0,d:.6,f:(dt,t)=>{rg.scale.setScalar(1+t*14);rg.material.opacity=1-t/.6},end:()=>scene.remove(rg)});for(let i=0;i<120;i++){const a=Math.random()*6.283,s=4+Math.random()*10;spark(ex,.4,ez,Math.cos(a)*s,3+Math.random()*7,Math.sin(a)*s,i%2?0xffffff:0xff922b,.9)}}})}}
+[["🧨","Ladi Dukaan",0xc92a2a,"लड़ी ले लो लड़ी! धमाकेदार लड़ी!",[["🧨","Ladi x2",40,"c","ladi",2]]],
+["💥","Sutli Bomb Ghar",0x495057,"सुतली बम! आवाज़ दूर तक जाएगी!",[["💥","Sutli Bomb x3",40,"c","bomb",3]]],
+["🎇","Sky Shot Dukaan",0x7048e8,"स्काई शॉट! आसमान रंगीन कर दो!",[["🎇","Sky Shot x2",90,"c","sky",2]]],
+["🌈","Rangeen Anar",0x2f9e44,"रंगीन अनार! सात रंग का फव्वारा!",[["🌈","Rangeen Anar x2",60,"c","anar",2]]]].forEach((s,i)=>stall(s,i<2?-44:24,i<2?158+i*16:150+(i-2)*16,i<2?Math.PI/2:-Math.PI/2));
+/* --- unique sound for every ride --- */
+let RD=0;const RTm={},ev=(k,p)=>{RTm[k]=(RTm[k]||0)+RD;if(RTm[k]>=p){RTm[k]=0;return 1}},nx=(k,n)=>RTm[k+"i"]=((RTm[k+"i"]||0)+1)%n;
+function rideSnd(n,dt,t){RD=dt;
+if(n=="Bada Chakri"){if(ev("a",.45))tone([523,659,784,1046,784,659,523,392][nx("a",8)],.6,"sine",.08)}
+else if(n=="Ghoda Jhoola"){if(ev("a",.3)){tone([392,440,494,523,494,440,392,330][nx("a",8)],.3,"triangle",.1);if(RTm.ai%2==0)tone(98,.25,"square",.05)}}
+else if(n=="Jahaz Jhoola"||n=="Dragon Jhoola"){if(ev("a",.95)){noise(.8,.12,600);tone(250,.8,"sine",.06,600)}}
+else if(n=="Maut Ka Kuan"){if(ev("a",.09))tone(60+(Math.sin(t*3)+1)*35,.12,"sawtooth",.09)}
+else if(n=="Udan Jhoola"){if(ev("a",.6))hiss(.7,.05,900);if(ev("b",1.3)){tone(1568,.5,"sine",.06);tone(2093,.5,"sine",.04)}}
+else if(n=="Break Dance"){if(ev("a",.25)){tone(130,.18,"sine",.35,40);setTimeout(()=>noise(.04,.1,7000),125)}if(ev("c",.5))tone(55,.25,"square",.07)}
+else if(n=="Toy Train"){if(ev("a",.22))noise(.09,.18,700);if(ev("b",4)){tone(523,.6,"triangle",.1);tone(659,.6,"triangle",.1)}}
+else if(n=="Haath Jhoola"){if(ev("a",.7)){tone(180+Math.random()*40,.25,"sawtooth",.04,140);noise(.05,.08,300)}}
+else if(n=="Roller Coaster"){if(t<4){if(ev("a",.12))noise(.03,.2,1500)}else{if(ev("a",.45))hiss(.5,.1,1500);if(ev("b",1.5))tone(900,.6,"sine",.05,400)}}
+else if(n=="Drop Tower"){const p=t%9;if(p>6&&p<6.8){if(ev("a",.1))hiss(.3,.2,800)}else if(ev("a",1))tone(2000,.03,"square",.04)}
+else if(n=="Tora Tora"){if(ev("a",.7)){tone(250,.7,"triangle",.07,450);hiss(.5,.05,900)}}
+else if(n=="Takkar Gaadi"){if(ev("a",.1))tone(55,.1,"sawtooth",.05);if(ev("b",1.1)){noise(.1,.25,200);tone(1500,.15,"square",.05,300)}}
+else if(n=="Helicopter Ride"){if(ev("a",.12))tone(60,.08,"square",.14)}}
+/* --- ghost + monkey scenes --- */
+let scT,scI;
+function scene2(r){if(r.n=="Bhoot Bangla")return ghost();if(r.n=="Bandar Tamasha")return monkeyShow();if(r.n=="Sheesh Mahal")return sheesh();if(r.n=="Jadu Show")return magicShow();if(r.n=="Kushti Akhara")return kushti();if(r.n=="Nautanki Manch")return nautanki();sfx("drum");toast("🎪 "+r.n);say(r.show,1.5)}
+function endScene(){clearTimeout(scT);clearInterval(scI);const s=$("scn");s.style.display="none";s.innerHTML="";window.speechSynthesis&&speechSynthesis.cancel()}
+function ghost(){const s=$("scn");s.innerHTML='<div class="gbg"></div><div class="g1">👻</div><div class="g2">💀</div><div class="g3">🦇</div><div class="g4">🕷️</div><div class="fl"></div><div class="gt">Bhoot Bangla me aapka swagat hai...<br><span id="gt2"></span></div>';s.style.display="block";
+tone(55,5,"sawtooth",.18,40);let k=0;scI=setInterval(()=>{k++;if(k%3==0)noise(.4,.08,300);if(k==6)say("हू हू हू... मैं भूत हूँ... बिल दो!",.5);if(k==13){tone(1400,.9,"sawtooth",.3,2600);noise(1,.35,500);bang(.6);$("gt2").textContent="BOOOO! 👻 Bill de do bhai!"}},350);scT=setTimeout(endScene,7500)}
+function monkeyShow(){const s=$("scn");s.innerHTML='<div class="mbg"></div><div class="mkm" id="mkm" onclick="tipMk()">🐒</div><div class="dmr">🥁</div><div class="mad">🧑‍🦱</div><div class="stt">Bandar naach raha hai! 🎶<br><small>Bandar par tap karo = ₹5 inaam • bahar tap = band</small></div><div class="cfx">✨🎉🎊✨</div>';s.style.display="block";say("डमरू बजे, बंदर नाचे! वाह वाह!",1.4);let k=0;scI=setInterval(()=>{k++;tone(k%4==3?200:150,.1,"triangle",.4,90);if(k%2==0)tone(900,.04,"square",.04)},230);scT=setTimeout(endScene,12000)}
+function tipMk(){if(wal<5)return toast("₹5 nahi hain 😅");wal-=5;hud();sfx("coin");const m=$("mkm");m.classList.remove("flp");void m.offsetWidth;m.classList.add("flp");say("शाबाश! बंदर खुश!",1.5)}
+/* 3D dancing monkey + madari near the tent */
+const MK=[];function mkMonkey(x,z){const g=new THREE.Group();g.position.set(x,0,z);scene.add(g);const br=M(0x7b4a2a),sk=M(0xe0b28a);box(.8,1,.5,br,0,1.2,0,g);const hd=new THREE.Mesh(new THREE.SphereGeometry(.4,10,8),br);hd.position.y=2.05;g.add(hd);const f=new THREE.Mesh(new THREE.SphereGeometry(.25,8,6),sk);f.position.set(0,2,.25);g.add(f);
+[-.4,.4].forEach(s=>{const e=new THREE.Mesh(new THREE.SphereGeometry(.17,6,6),sk);e.position.set(s,2.15,0);g.add(e)});const lm=(px,py)=>{const a=new THREE.Group();a.position.set(px,py,0);box(.22,.8,.22,br,0,-.4,0,a);g.add(a);return a};
+g.userData={la:lm(-.55,1.65),ra:lm(.55,1.65),ll:lm(-.25,.8),rl:lm(.25,.8)};box(.12,1.2,.12,br,0,1,-.4,g).rotation.x=-.6;MK.push(g);return g}
+const mpos=RPN["Bandar Tamasha"];mkMonkey(mpos[0]+6,mpos[1]+6);const mad=person(0xff922b,0,0xc68642,0x151515);mad.position.set(mpos[0]+9,0,mpos[1]+7);mad.rotation.y=-2.3;scene.add(mad);const dmr=emo("🥁");dmr.position.set(0,1.4,.8);mad.add(dmr);
+/* --- Dost Chintu: calls parents --- */
+const FR=person(0x2f9e44,0,0xd9a066,0x2b1608);FR.userData.hat.visible=true;FR.userData.hat.material.color.setHex(0xff922b);const frp=place(30,100,0,12);FR.position.set(frp[0],0,frp[1]);scene.add(FR);
+const frl=new THREE.Sprite(new THREE.SpriteMaterial({map:sign("DOST Chintu",0x2f9e44),fog:false}));frl.scale.set(7,1.75,1);frl.position.y=4.6;FR.add(frl);const FRS={tx:frp[0],tz:frp[1],cd:0,call:0};
+function callParents(){FRS.cd=999;FRS.call=4;FRS.n++;FRS.done=1;toast("📞 Dost Chintu ne Mummy-Papa ko call kar diya! Bhaago!");say("हेलो आंटी! आपका बेटा मेले में है, मैं यहीं हूँ, जल्दी आइए!",1.3);chase.goto={x:FR.position.x,z:FR.position.z};chase.delay=10;track("friend_call")}
+/* --- donation pole --- */
+const DON={top:[],total:0},BDS=[],cvT=document.createElement("canvas"),cvS=document.createElement("canvas");cvT.width=cvS.width=640;cvT.height=cvS.height=800;const txT=new THREE.CanvasTexture(cvT),txS=new THREE.CanvasTexture(cvS);
+function drawBoard(){let x=cvT.getContext("2d"),g=x.createLinearGradient(0,0,0,800);g.addColorStop(0,"#5f1d78");g.addColorStop(1,"#d9480f");x.fillStyle=g;x.fillRect(0,0,640,800);x.strokeStyle="#ffd43b";x.lineWidth=12;x.strokeRect(8,8,624,784);x.textAlign="center";x.fillStyle="#ffd43b";x.font="bold 54px sans-serif";x.fillText("🏆 DONATION POLE",320,84);x.fillStyle="#fff";x.font="26px sans-serif";x.fillText("Sabse bade daani - naam yahan chamkega!",320,128);
+const L=DON.top;L.slice(0,8).forEach((d,i)=>{x.fillStyle=i<3?"#ffd43b":"#fff";x.font="bold "+(i<3?46:40)+"px sans-serif";x.textAlign="left";x.fillText((["🥇","🥈","🥉"][i]||(i+1)+".")+" "+String(d.name).slice(0,12),36,210+i*72);x.textAlign="right";x.fillText("₹"+d.amount,604,210+i*72)});
+if(!L.length){x.textAlign="center";x.fillStyle="#fff";x.font="34px sans-serif";x.fillText("Abhi koi daani nahi",320,380);x.fillText("Pehle donor aap bano! 💝",320,435)}
+x.textAlign="center";x.fillStyle="#ffe8a3";x.font="24px sans-serif";x.fillText("Donate: pole ke paas jao + button dabao",320,770);txT.needsUpdate=true;
+x=cvS.getContext("2d");g=x.createLinearGradient(0,0,0,800);g.addColorStop(0,"#0b3954");g.addColorStop(1,"#5f1d78");x.fillStyle=g;x.fillRect(0,0,640,800);x.strokeStyle="#ffd43b";x.lineWidth=12;x.strokeRect(8,8,624,784);x.textAlign="center";x.fillStyle="#ffd43b";x.font="bold 46px sans-serif";x.fillText("🌟 AUR DAANI",320,84);
+L.slice(8,22).forEach((d,i)=>{const c=i<7?0:1,r=i%7;x.fillStyle="#fff";x.font="bold 25px sans-serif";x.textAlign="left";x.fillText((i+9)+". "+String(d.name).slice(0,9),24+c*316,160+r*92);x.fillStyle="#ffd43b";x.font="24px sans-serif";x.fillText("₹"+d.amount,24+c*316,190+r*92)});
+if(L.length<9){x.textAlign="center";x.fillStyle="#fff";x.font="28px sans-serif";x.fillText("Yahan baaki daaniyon ke",320,380);x.fillText("naam aayenge 💝",320,420)}txS.needsUpdate=true}
+function mkPole(px,pz,nm){const g=new THREE.Group();g.position.set(px,0,pz);scene.add(g);cy(1.3,1.8,14,0xd9480f,0,7,0,g,14);cy(.5,.5,38,0xd9480f,0,33,0,g,8);cy(3.4,3.9,1.4,0x7048e8,0,.7,0,g,18);cy(2.6,3.2,.8,0xffd43b,0,1.8,0,g,18);
+const bd=new THREE.Group();bd.position.y=30;g.add(bd);const mt=t=>new THREE.MeshBasicMaterial({map:t}),dk=new THREE.MeshBasicMaterial({color:0x222222});bd.add(new THREE.Mesh(new THREE.BoxGeometry(26,32,1.4),[mt(txS),mt(txS),dk,dk,mt(txT),mt(txT)]));BDS.push(bd);
+const ball=new THREE.Mesh(new THREE.SphereGeometry(1.6,12,10),new THREE.MeshBasicMaterial({color:0xffd43b}));ball.position.y=50;g.add(ball);
+const lb=new THREE.Sprite(new THREE.SpriteMaterial({map:sign("DONATE HERE",0xd9480f),fog:false}));lb.scale.set(9,2.2,1);lb.position.y=7;g.add(lb);circ.push({x:px,z:pz,r:3.6});
+const s=["💝",nm,0xd9480f,"दान करो! अपना नाम सबसे ऊपर लिखवाओ!",[]];s.don=1;s.x=px;s.z=pz;ALL.push(s)}
+mkPole(0,-6,"Donation Pole");mkPole(-70,86,"Donation Pole 2");drawBoard();
+const aggr=a=>{const m={};a.forEach(d=>{m[d.name]=(m[d.name]||0)+d.amount});return Object.entries(m).map(e=>({name:e[0],amount:e[1]})).sort((a,b)=>b.amount-a.amount)};
+async function loadDon(){try{if(api()){const j=await(await fetch(api()+"/donations")).json();DON.top=j.top||[];DON.total=j.total||0}else{const a=JSON.parse(localStorage.getItem("mela_don")||"[]");DON.top=aggr(a);DON.total=a.reduce((s,d)=>s+d.amount,0)}}catch(e){}drawBoard()}
+loadDon();setInterval(loadDon,30000);
+function openDonate(){const L=DON.top.slice(0,3).map((d,i)=>"<div class='it'><b>"+["🥇","🥈","🥉"][i]+" "+esc(d.name)+"</b><span>₹"+d.amount+"</span></div>").join("")||"<p>Abhi koi daani nahi. Pehle aap bano! 💝</p>";
+$("donbox").innerHTML="<h2>💝 Donation Pole</h2><small>"+(api()?"Razorpay secure payment":"⚠️ Demo mode (sirf is device par dikhega)")+"</small>"+L+"<p><input id='dn' maxlength='16' placeholder='Pole par likhne wala naam' style='width:100%;font-size:16px;padding:8px;border-radius:10px'></p><div>"+[10,50,100,500,1000].map(a=>"<button class='b' onclick=\"$('da').value="+a+"\">₹"+a+"</button>").join(" ")+"</div><p><input id='da' type='number' min='10' max='10000' value='100' style='width:100%;font-size:16px;padding:8px;border-radius:10px'></p><button class='b' onclick='payDon()'>💝 Donate karo</button> <button class='b' onclick='viewBoard()'>👀 Board dekho</button> <button class='b' onclick=\"$('don').style.display='none'\">Band</button>";$("don").style.display="flex"}
+function rzpLoad(){return new Promise((ok,no)=>{if(window.Razorpay)return ok();const s=document.createElement("script");s.src="https://checkout.razorpay.com/v1/checkout.js";s.onload=ok;s.onerror=no;document.head.appendChild(s)})}
+function doneDon(n,a,m){$("don").style.display="none";track("donate",{item:n,price:a,mode:m});toast("💝 Shukriya "+n+"! Naam pole par chamak raha hai");say("बहुत बहुत धन्यवाद "+n+"! आप महान दानी हैं!",1.2);sfx("coin");loadDon()}
+async function payDon(){const name=($("dn").value||"").replace(/[<>&"'`]/g,"").trim().slice(0,16),amt=Math.floor(+$("da").value);if(!name)return toast("Naam likho");if(!(amt>=10&&amt<=10000))return toast("Amount ₹10 se ₹10000 ke beech");
+if(!api()){askOk("Demo mode: asli payment connect nahi hai. Test ke liye ₹"+amt+" ka demo donation board par dikhayein?",()=>{const a=LS2("mela_don",[]);a.push({name:name,amount:amt});SV("mela_don",a.slice(-200));doneDon(name,amt,"demo")});return}
+try{const H={"Content-Type":"application/json"},o=await(await fetch(api()+"/donate/order",{method:"POST",headers:H,body:JSON.stringify({uid:UID,name,amount:amt})})).json();if(!o.order_id)throw 0;await rzpLoad();
+new Razorpay({key:o.key,order_id:o.order_id,amount:o.amount,currency:"INR",name:"FunnyMela",description:"Donation",theme:{color:"#e8590c"},handler:async r=>{const v=await(await fetch(api()+"/verify",{method:"POST",headers:H,body:JSON.stringify(r)})).json();if(v.ok)doneDon(name,amt,"razorpay");else toast("Payment verify nahi hua")}}).open()}catch(e){toast("Payment shuru nahi hua")}}
+/* --- missions + partner chat --- */
+const MS=[{t:"2 jhoole jhoolo 🎡",k:"ride",n:2,r:200},{t:"3 cheezein kharido 🛒",k:"buy",n:3,r:150},{t:"Partner ko gift do 🎁",k:"gift",n:1,r:300},{t:"Bandar ka tamasha dekho 🐒",k:"bnd",n:1,r:150},{t:"Patake jalao 🎆",k:"burn",n:1,r:300},{t:"Maut Ka Kuan me baitho 🏍️",k:"mkk",n:1,r:250},{t:"60 second Mummy-Papa se bacho 😅",k:"surv",n:60,r:400}],MC={},GIFTS=["Kaanch Chudi","Mala","Anguthi","Mukut","Mukut","Gajra","Gulab","Teddy","Bindi","Jhumke"];let mi=0;
+function missions(ev,d){if(ev=="ride"){MC.ride=(MC.ride||0)+1;if(d.item=="Maut Ka Kuan")MC.mkk=1;if(d.item=="Bandar Tamasha")MC.bnd=1}if(ev=="buy"){MC.buy=(MC.buy||0)+1;if(GIFTS.includes(d.item)){MC.gift=1;say(PG?"थैंक यू जान! कितना प्यारा गिफ्ट!":"थैंक यू यार! मज़ा आ गया!",PG?1.5:.9)}}if(ev=="burn")MC.burn=1;mCheck()}
+let _mChecking=false;function mCheck(){if(_mChecking)return;_mChecking=true;try{while(mi<MS.length){const m=MS[mi];if(!m)break;const v=Math.min(m.n,Math.floor(MC[m.k]||0));if(v>=m.n){mi++;wal+=m.r;hud();sfx("coin");toast("✅ Mission complete! +₹"+m.r)}else{$("ms").textContent="🎯 "+m.t+" ("+v+"/"+m.n+")";break}}if(mi>=MS.length)$("ms").textContent="🏆 Saare missions complete!"}finally{_mChecking=false}}
+mCheck();
+const PL=()=>PG?["सुनो, गोलगप्पे खिलाओ ना!","देखो कितना सुंदर झूला! चलो बैठें!","मुझे चूड़ियाँ चाहिए!","मम्मी पापा को पता चला तो मुझे मत फँसाना!"]:["यार चलो झूले पर चलें!","भूख लगी है, कुछ खिलाओ!","मम्मी पापा आ गए तो भाग जाना!","पटाखे जलाने चलें बाहर?"];
+setInterval(()=>{if(phase=="play"&&!riding&&!shopOpen&&Math.random()<AMB[VL]){const l=PL();say(l[Math.random()*4|0],PG?1.5:.9)}},38000);
+/* --- animation loop: monkey, madari, pole, friend --- */
+let anLast=0;(function an(ms){requestAnimationFrame(an);const dt=Math.min((ms-anLast)/1000||0,.05);anLast=ms;if(PAUSE())return;
+MK.forEach(g=>{const t=T*8,u=g.userData;g.position.y=Math.abs(Math.sin(t))*.5;g.rotation.y=Math.sin(T*2)*.8;u.la.rotation.z=2+Math.sin(t)*.6;u.ra.rotation.z=-2-Math.sin(t+1)*.6;u.ll.rotation.x=Math.sin(t)*.7;u.rl.rotation.x=-Math.sin(t)*.7});
+mad.userData.a[1].rotation.x=-1.2+Math.sin(T*10)*.6;mad.userData.a[0].rotation.x=-1.2+Math.cos(T*10)*.6;
+if(FRS.call>0){FRS.call-=dt;FR.userData.a[1].rotation.x=-2.7;FR.userData.a[0].rotation.x=0;if(phase=="play")FR.rotation.y=Math.atan2(P.position.x-FR.position.x,P.position.z-FR.position.z)}
+else{const dx=FRS.tx-FR.position.x,dz=FRS.tz-FR.position.z,d=Math.hypot(dx,dz);if(d<.8){FRS.tx=frp[0]+(Math.random()-.5)*24;FRS.tz=frp[1]+(Math.random()-.5)*24}else{FR.position.x+=dx/d*1.3*dt;FR.position.z+=dz/d*1.3*dt;FR.rotation.y=Math.atan2(dx,dz)}walk(FR,d>.8,T+2)}
+FRS.cd-=dt;if(phase=="play"&&FR.visible&&FRS.cd<=0&&FRS.call<=0&&Math.hypot(P.position.x-FR.position.x,P.position.z-FR.position.z)<6)callParents()})();
+/* --- parents lose track / spawn --- */
+function spawnPar(mode){chase.on=true;chase.mode=mode;chase.far=0;PAR.forEach((p,i)=>{p.visible=true;p.position.set(i*3-1.5,0,128)});say(mode=="goto"?"चलो चलो, बेटा उधर है!":"अरे ओ बेटा! रुक वहीं! बिना बताए मेले में आया है!",.9);toast(mode=="goto"?"😡 Mummy-Papa Dost ki location par aa rahe hain!":"😡 Mummy-Papa aa gaye! Bachke bhago!");sfx("lose")}
+function lostPar(){chase.on=false;chase.mode="hunt";PAR.forEach(p=>p.visible=false);$("warn").style.display="none";chase.next=ct+45+Math.random()*25;toast("😮‍💨 Mummy-Papa ko tum nahi mile! Aaram se ghoomo");say("हुर्रे! बच गए! अब आराम से घूमो!",1.3)}
+/* --- policy pages --- */
+const PGS={
+About:`<h2>ℹ️ About Us</h2><p>${SITE.name} ek free-to-play 3D mela game hai: bike se mela jao, jhoole jhoolo, thele aur dukaanon se khareedo, Diwali ke patake jalao aur Mummy-Papa se bacho.</p><p>Is game ko ${SITE.owner} ne banaya hai. Game me ads aur optional in-app purchases (skins, power-ups, donations) hain, jinse game chalta rehta hai.</p><p>Sampark ke liye Contact page dekhein.</p>`,
+Privacy:`<h2>🔒 Privacy Policy</h2><p><b>Kya data lete hain:</b> aapka game nickname, game activity (jaise kya kharida, kaun sa jhoola), feedback, aur donation par likha naam. Hum aapka card/UPI/bank detail nahi rakhte; payment Razorpay handle karta hai.</p><p><b>Kyon:</b> game chalane, leaderboard dikhane, galtiyan theek karne aur payment verify karne ke liye.</p><p><b>Ads aur cookies:</b> ad partners (jaise Google AdSense) cookies/device ID use kar sakte hain. Browser storage me aapki settings aur guest ID rakhi jati hai.</p><p><b>Bachche:</b> 13 saal se kam umar ke bachche parents ki permission ke saath khelein.</p><p><b>Aapke adhikar:</b> data delete/correct karwane ke liye ${SITE.email} par likhein.</p><p><small>Last updated: October 2026</small></p>`,
+Terms:`<h2>📜 Terms & Conditions</h2><p>1. Game khelkar aap in shartein maante hain.</p><p>2. Game ke coins (₹) virtual hain, unki koi asli keemat nahi aur wo cash me nahi badle ja sakte.</p><p>3. Store ki cheezein digital hain (skins, power-ups, passes). Ye sirf game me chalti hain.</p><p>4. Donation swaichik hai. Donation ke badle koi item/labh nahi milta, sirf naam pole par dikhta hai. Gandi/ghalat bhasha wale naam hata diye jayenge.</p><p>5. Hack, cheat, ya payment ke saath chhedchhad par account/purchase band kiya ja sakta hai.</p><p>6. Hum game me badlav ya band karne ka adhikar rakhte hain.</p><p>7. Vivad ki sthiti me Indian kanoon lagu honge.</p>`,
+Refund:`<h2>💸 Refund & Cancellation</h2><p>Digital cheezein turant mil jati hain, isliye ek baar mil jane ke baad cancel ya refund nahi hota.</p><p><b>In halaton me refund/ fix:</b> (a) paise kat gaye par item nahi mila, (b) ek hi cheez ke liye do baar paise kate. Aise me 7 din ke andar ${SITE.email} par payment ID ke saath likhein.</p><p>Fail hue payment ke paise Razorpay/bank ke niyam se aam taur par 5-7 working din me wapas aa jate hain.</p><p>Donation wapas nahi hota.</p>`,
+Delivery:`<h2>🚚 Shipping & Delivery</h2><p>Hum koi physical saaman nahi bhejte. Sab kuch digital hai aur payment safal hote hi game me turant mil jata hai. Agar 30 minute me na mile to game dobara kholein; phir bhi na mile to Contact page par likhein.</p>`,
+Contact:`<h2>📞 Contact Us</h2><p><b>${SITE.name}</b></p><p>Email: ${SITE.email}</p><p>Phone: ${SITE.phone}</p><p>Pata: ${SITE.addr}</p><p>Hum aam taur par 2-3 working din me jawab dete hain.</p>`};
+function openPage(k){const t=Object.keys(PGS).map(n=>"<button class='b' style='padding:6px 10px;margin:2px"+(n==k?";outline:3px solid var(--ac)":"")+"' onclick=\"openPage('"+n+"')\">"+n+"</button>").join("");$("pgbox").innerHTML="<div style='text-align:center'>"+t+"</div>"+PGS[k]+"<p style='text-align:center'><button class='b' onclick=\"$('pg').style.display='none'\">Band karo</button></p>";$("pg").style.display="flex"}
+$("pgl").innerHTML=Object.keys(PGS).map(k=>"<a href='#' onclick=\"openPage('"+k+"');return false\" style='color:#ffe8a3;margin:0 6px'>"+k+"</a>").join("·");
+$("pgrow").innerHTML=Object.keys(PGS).map(k=>"<button class='b' style='padding:6px 10px;margin:2px' onclick=\"openPage('"+k+"')\">"+k+"</button>").join("");
+/* ===== v6: bigger gate, shop blast + fire truck, sheesh mahal game, wardrobe, 6 music tracks, hawker voices ===== */
+let lastPole=null,blastBusy=false;const boardView={t:0,pole:null};
+/* gate + road diyas */
+
+
+/* donation board close-up */
+function viewBoard(){if(!lastPole)return;$("don").style.display="none";boardView.t=7;boardView.pole=lastPole;chase.stun=Math.max(chase.stun,7)}
+function boardCam(dt){const q=boardView.pole,bd=BDS[q.x==0?0:1];boardView.t-=dt;let dx=P.position.x-q.x,dz=P.position.z-q.z;const d=Math.hypot(dx,dz)||1;dx/=d;dz/=d;bd.userData.hold=1;bd.rotation.y=Math.atan2(dx,dz);cam.position.lerp(new V(q.x+dx*30,24,q.z+dz*30),1-Math.exp(-dt*4));cam.lookAt(q.x,28,q.z);if(boardView.t<=0)bd.userData.hold=0}
+/* shop blast -> fire truck -> new shop */
+const gOf=s=>scene.children.find(o=>o.isGroup&&o.position.y==0&&Math.abs(o.position.x-s.x)<.02&&Math.abs(o.position.z-s.z)<.02);
+function nearShop(x,z,r){let b=null,bd=r;ALL.forEach(s=>{if(s.don||s.dead||VEND.some(v=>v.s===s))return;const d=Math.hypot(s.x-x,s.z-z);if(d<bd&&gOf(s)){bd=d;b=s}});return b}
+function mkStallMesh(s,x,z,ry){const g=new THREE.Group();g.position.set(x,0,z);g.rotation.y=ry;scene.add(g);box(6,4.2,.3,0xfff1d6,0,2.1,-1.4,g);box(5.6,1.1,1.4,s[2],0,.55,1.3,g);box(6.6,.25,3.8,s[2],0,4.5,.5,g).rotation.x=.18;box(.3,4.6,.3,0x6d4c41,-3,2.3,2,g);box(.3,4.6,.3,0x6d4c41,3,2.3,2,g);
+const sg=new THREE.Mesh(new THREE.PlaneGeometry(5.6,1.4),new THREE.MeshBasicMaterial({map:sign(s[1],s[2])}));sg.position.set(0,5.7,2.2);g.add(sg);s[4].forEach((it,k)=>{const e=emo(it[0]);e.scale.set(1.3,1.3,1);e.position.set((k-(s[4].length-1)/2)*1.7,2,1.4);g.add(e)});const k=person(0xf08c00,0,0xc68642);k.position.set(0,0,-.3);g.add(k);return g}
+function mkTruck(){const g=new THREE.Group();box(3,2.2,6,0xe03131,0,1.9,-.6,g);box(3,2,2,0xc92a2a,0,1.8,3.3,g);box(2.6,.8,.1,0x74c0fc,0,2.4,4.35,g);box(3.1,.4,6,0xffffff,0,1.3,-.6,g);box(.6,.5,7,0xcccccc,0,3.4,-.6,g).rotation.x=-.12;
+[0xff3b3b,0x3b6bff].forEach((c,i)=>{g.userData["l"+i]=box(.6,.4,.6,c,i?.9:-.9,3.2,3.3,g)});[[-1.6,3],[1.6,3],[-1.6,-2.4],[1.6,-2.4]].forEach(q=>{cy(.7,.7,.5,0x111111,q[0],.7,q[1],g,12).rotation.z=Math.PI/2});
+const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:sign("FIRE BRIGADE",0xe03131),fog:false}));sp.scale.set(8,2,1);sp.position.y=6;g.add(sp);return g}
+function blast(s){const g=gOf(s);if(!g||blastBusy)return;blastBusy=true;s.dead=true;const x=s.x,z=s.z,ry=g.rotation.y,cols=[0xff6b6b,0xffd43b,0xff922b,0x74c0fc,0x69db7c];
+const dp=Math.hypot(P.position.x-x,P.position.z-z);if(dp<9&&phase=="play"&&!riding){const a=Math.atan2(P.position.x-x,P.position.z-z);P.position.x+=Math.sin(a)*(10-dp);P.position.z+=Math.cos(a)*(10-dp)}
+toast("💥 BLAST! Poori dukaan me patake fat gaye!");say("अरे मेरी दुकान! हाय हाय! पटाखे फट गए!",1.7);bang(1.5);crackle(25,.2);track("blast",{item:s[1]});
+for(let i=0;i<12;i++)setTimeout(()=>{const bx=x+(Math.random()-.5)*7,bz=z+(Math.random()-.5)*4,by=1+Math.random()*4;bang(.5,1);for(let j=0;j<45;j++){const a=Math.random()*6.283,b=Math.acos(Math.random()*2-1),v=5+Math.random()*9;spark(bx,by,bz,Math.sin(b)*Math.cos(a)*v,Math.cos(b)*v+3,Math.sin(b)*Math.sin(a)*v,cols[j%5],1+Math.random()*.8)}},i*170);
+for(let i=0;i<3;i++)setTimeout(()=>rocket(x+(i-1)*3,z,i==1,false),600+i*500);
+s.fire=true;
+setTimeout(()=>{scene.remove(g);const ash=cy(3.6,3.6,.05,0x1a1a1a,x,.05,z,scene,16);
+EM.push({t:0,d:90,f:()=>{if(!s.fire)return;for(let i=0;i<5;i++)spark(x+(Math.random()-.5)*5,.3,z+(Math.random()-.5)*3,(Math.random()-.5)*.8,3+Math.random()*3,(Math.random()-.5)*.8,i%2?0xff922b:0xffd43b,.9);if(Math.random()<.5)spark(x+(Math.random()-.5)*4,3,z,0,2,0,0x555555,1.8);if(Math.random()<.15)hiss(.4,.05,1500)}});
+const tr=mkTruck(),tx=x+(x<0?9:-9),tz=z;tr.position.set(0,0,250);scene.add(tr);let st=0,ph=0,tt=0,alt=false;
+const te={t:0,d:60,f:(dt)=>{st+=dt;if(st>.35){st=0;alt=!alt;tone(alt?880:660,.3,"square",.05);tr.userData.l0.visible=alt;tr.userData.l1.visible=!alt}
+if(ph==0){const dx=tx-tr.position.x,dz=tz-tr.position.z,d=Math.hypot(dx,dz);if(d>1){tr.position.x+=dx/d*30*dt;tr.position.z+=dz/d*30*dt;tr.rotation.y=Math.atan2(dx,dz)}else{ph=1;tt=0;tr.rotation.y=Math.atan2(x-tr.position.x,z-tr.position.z)}}
+else if(ph==1){tt+=dt;for(let i=0;i<10;i++)spark(tr.position.x,3.8,tr.position.z,(x-tr.position.x)/.9+(Math.random()-.5)*2,5+Math.random()*2,(z-tr.position.z)/.9+(Math.random()-.5)*2,0x66ccff,.9);if(Math.random()<.2)hiss(.4,.07,2500);if(tt>4.5){s.fire=false;ph=2;tt=0;toast("🚒 Aag bujh gayi!");say("आग बुझ गई! शाबाश दमकल वालों!",1.3)}}
+else{tt+=dt;tr.position.z+=24*dt;tr.rotation.y=0;if(tt>3.5){te.d=0;scene.remove(tr);scene.remove(ash);const ng=mkStallMesh(s,x,z,ry);ng.scale.set(1,.01,1);EM.push({t:0,d:1.2,f:(d2,t2)=>{ng.scale.y=Math.max(.01,1-Math.exp(-6*t2)*Math.cos(14*t2))},end:()=>ng.scale.y=1});
+for(let i=0;i<90;i++){const a=Math.random()*6.283,v=3+Math.random()*7;spark(x,3,z,Math.cos(a)*v,5+Math.random()*7,Math.sin(a)*v,cols[i%5],1.6)}[523,659,784,1046].forEach((f,i)=>setTimeout(()=>tone(f,.3,"triangle",.2),i*110));
+toast("🏪 Nayi dukaan khul gayi! Grand Opening!");say("नई दुकान खुल गई! आइए आइए!",1.3);s.dead=false;s.fire=false;blastBusy=false}}}};EM.push(te)},1800)}
+/* sheesh mahal mirror game */
+const SM={r:0,sc:0},MTX=["scaleX(-1)","scaleY(.55)","scaleX(.5)","scale(1.4,.7)","skewX(18deg)","scaleY(1.5)","rotate(180deg)","scaleX(-1) skewY(14deg)"];
+function sheesh(){SM.r=0;SM.sc=0;sheeshDraw();[1568,1976,2349].forEach((f,i)=>setTimeout(()=>tone(f,.5,"sine",.08),i*140));say("शीश महल में आपका स्वागत है! असली को पहचानो!",1.3)}
+function sheeshDraw(){const s=$("scn"),em=PG?"🧑":"👧",real=Math.random()*9|0;let h='<div class="mbg2"></div><div class="cl" onclick="endScene()">✖</div><div class="stt">🪞 Sheesh Mahal<br><small>Asli '+em+' ko pehchano! Round '+(SM.r+1)+'/3</small></div><div class="mg">';
+for(let i=0;i<9;i++){const fx=i==real?"":"transform:"+MTX[i%8]+";filter:hue-rotate("+(i*35+20)+"deg)";h+='<div class="mc" onclick="event.stopPropagation();pickM('+i+','+real+')"><span style="display:inline-block;'+fx+'">'+em+'</span></div>'}s.innerHTML=h+'</div>';s.style.display="block"}
+function pickM(i,real){if(i==real){SM.sc+=50;wal+=50;hud();sfx("coin");say("शाबाश! सही पहचाना!",1.4)}else{sfx("lose");say("अरे! ये तो परछाई है!",1.4)}SM.r++;if(SM.r<3)sheeshDraw();else{endScene();toast("🪞 Sheesh Mahal khatam! Inaam ₹"+SM.sc)}}
+/* wardrobe: gender-wise items that the character actually wears */
+const WG={"Laal Kurta":"m","Hara Suit":"f","Peeli Saree":"f","Chamda Joota":"m","Laal Topi":"m","Pagdi":"m","Kaanch Chudi":"f","Mala":"f","Mukut":"f","Neela Kurta":"m","Safed Kurta":"m","Pink Lehnga":"f","Laal Saree":"f","Jhumke":"f","Haar":"f","Gold Chain":"m","Gajra":"f","Heel Sandal":"f","Boot":"m"};
+const okFor=it=>{const g=WG[it[1]];if(!g)return true;return(g=="f")==!PG};
+const fix=(n,t,c)=>SH.concat(THL,GS).forEach(s=>s[4].forEach(it=>{if(it[1]==n){it[3]=t;it[4]=c}}));setTimeout(()=>{fix("Mala","n",0xffd43b);fix("Kaanch Chudi","b",0xe03131);fix("Anguthi","b",0xffd43b);fix("Ghadi","w",0xc0c0c0);fix("Mukut","h",0xffd43b);fix("Gajra","g",0xffffff);},0);
+SH[1][4].push(["👔","Neela Kurta",260,"s",0x1971c2],["🧥","Safed Kurta",280,"s",0xf1f3f5],["👗","Pink Lehnga",450,"s",0xf06595],["🥻","Laal Saree",520,"s",0xc92a2a]);
+SH[0][4].push(["👠","Heel Sandal",250,"o",0xe64980],["🥾","Boot",300,"o",0x3e2723]);SH[3][4].push(["💎","Jhumke",120,"e",0xffd43b]);SH[17][4].push(["📿","Haar",180,"n",0xffd43b],["⛓️","Gold Chain",200,"n",0xffd43b]);SH[11][4].push(["🕶️","Chashma",90,"q",0x111111]);
+const WR={};
+function wearAcc(it,who){who=who||P;const t=it[3],c=it[4],u=who.userData;if(!t||!"benqgw".includes(t))return;const WRr=u.wr=u.wr||{};(WRr[t]||[]).forEach(m=>m.parent&&m.parent.remove(m));WRr[t]=[];const add=(m,p)=>{p.add(m);WRr[t].push(m)},mk=(g,col)=>new THREE.Mesh(g,M(col));
+if(t=="b")u.a.forEach(a=>{const m=mk(new THREE.TorusGeometry(.17,.045,6,12),c);m.rotation.x=Math.PI/2;m.position.y=-.78;add(m,a)});
+if(t=="w")add(box(.3,.12,.3,c,0,-.75,0),u.a[0]);
+if(t=="e")[-.42,.42].forEach(s=>{const m=mk(new THREE.SphereGeometry(.08,6,6),c);m.position.set(s,2.3,.05);add(m,who)});
+if(t=="n"){const m=mk(new THREE.TorusGeometry(.36,.05,6,14),c);m.rotation.x=Math.PI/2;m.position.set(0,2.05,.05);add(m,who)}
+if(t=="q")add(box(.72,.16,.1,c,0,2.5,.38),who);
+if(t=="g")for(let i=0;i<7;i++){const a=i/6*Math.PI,m=mk(new THREE.SphereGeometry(.1,6,6),i%2?0xffffff:0xffd43b);m.position.set(Math.cos(a)*.38,2.62+Math.sin(a)*.22,-.28);add(m,who)}}
+/* 6 background music tracks, rotate every 25-30s */
+const SCL=[261.6,277.2,329.6,349.2,392,415.3,493.9,523.3];let bgS=0,bgT=0,bgN=0;
+const BGT=[
+s=>{const b=s%8;if(b==0||b==3||b==4)tone(110,.3,"triangle",.4,45);if(b%2)tone(500,.08,"square",.035,300);if(b>5)tone(220,.15,"triangle",.22,90)},
+s=>{const f=SCL[[0,2,4,2,1,0,3,2][(s/4|0)%8]]*2;if(s%16==0)tone(130,3.4,"sine",.06);if(s%4==0)tone(f,.9,"sawtooth",.03,f*1.02);if(s%8==0)tone(100,.3,"triangle",.25,45)},
+s=>{if(s%4==0)tone(120,.2,"triangle",.4,45);if(s%2)tone(300,.1,"square",.05);tone(SCL[[0,2,4,2][(s/2|0)%4]]*4,.12,"triangle",.05)},
+s=>{const f=SCL[[4,5,6,4,2,3][(s/6|0)%6]]*2;if(s%6==0)tone(f,1,"sine",.08,f*1.03);if(s%4==0)tone(200,.1,"sine",.16,120);if(s%4==2)tone(420,.05,"triangle",.08)},
+s=>{if(s%8==0)[[261.6,329.6,392],[349.2,440,523.3]][(s/8|0)%2].forEach(f=>tone(f,1.7,"triangle",.045));const b=s%8;if(b==0||b==3)tone(110,.25,"triangle",.3,45);if(b==5)tone(380,.07,"square",.05)},
+s=>{if(s%5==0)hiss(1.1,.025,700);if(Math.random()<.08)tone(1800+Math.random()*600,.5,"sine",.04);if(s%8==0)tone(100,.3,"triangle",.14,45)}];
+function music(on){mOn=on;$("bm").textContent=on?"🎵":"🔇";clearInterval(mT);if(on){bgT=Math.random()*6|0;bgN=T+25+Math.random()*5;mT=setInterval(()=>{if(T>bgN){bgT=(bgT+1+(Math.random()*5|0))%6;bgN=T+25+Math.random()*5}inBG=1;try{BGT[bgT](bgS++)}catch(e){}inBG=0},230)}}
+/* funny hawker voices */
+const HAWK=["गन्ने का ग्लास बीस रुपये, बीस रुपये! पियो और जियो!","लो गोलगप्पे गोलगप्पे! दस के चार, दस के चार!","गरम चाय गरम चाय! अदरक वाली, इलायची वाली!","भुट्टा गरम भुट्टा! नींबू नमक मसाले वाला भुट्टा!","कुल्फी कुल्फी! ठंडी मटका कुल्फी, पचास की एक!","गुब्बारे गुब्बारे! दस रुपये का एक, बच्चे का रोना बंद!","आलू टिक्की गरम गरम! खाओ और टेंशन भगाओ!","जलेबी गरम गरम जलेबी! रसीली जलेबी!","पाँच रुपये में पाँच, पाँच रुपये में पाँच! उठाओ और भागो!","मौत का कुआँ, मौत का कुआँ! टिकट ले लो, टिकट ले लो!","फोटो खिंचवाओ फोटो! हीरो हीरोइन बन जाओ!","ले लो ले लो! पेट भर खाओ, जेब हल्की करो!","चूड़ी ले लो चूड़ी! काँच की चूड़ी, बहनजी की पसंद!","वड़ा पाव वड़ा पाव! गरमा गरम वड़ा पाव!"];
+THL[5][3]="गन्ने का ग्लास बीस रुपये, बीस रुपये! ठंडा ताज़ा रस!";THL[0][3]="लो गोलगप्पे गोलगप्पे! दस के चार, दस के चार!";THL[4][3]="भुट्टा गरम भुट्टा! नींबू नमक मसाले वाला!";
+setInterval(()=>{if(phase=="play"&&voice&&!riding&&!shopOpen&&!chase.on&&Math.random()<AMB[VL])say(HAWK[Math.random()*HAWK.length|0],[.9,1.2,1.5,1.7][Math.random()*4|0])},13000);
+/* ===== v3: more rides, vendors, ground sellers, minimap, trees ===== */
+addRide("Helicopter Ride",25,"हेलीकॉप्टर की सवारी! बच्चो उड़ चलो!",0,0,2,7,()=>{const g=new THREE.Group(),t=new THREE.Group(),hs=[],rs=[];g.add(t);cy(.4,.5,5,0xf08c00,0,2.5,0,g);cy(3,3,.3,0x2f9e44,0,.15,0,g,20);
+for(let i=0;i<4;i++){const h=new THREE.Group(),a=i/4*6.283,b=new THREE.Mesh(new THREE.SphereGeometry(.8,10,8),M([0xe03131,0x1c7ed6,0xfab005,0xf06595][i]));b.scale.set(1,.8,1.4);h.add(b);box(.2,.2,1.6,0x555555,0,.2,-1.6,h);const r=box(2.4,.06,.2,0x222222,0,.8,0,h);rs.push(r);h.position.set(Math.cos(a)*3.5,2,Math.sin(a)*3.5);h.rotation.y=-a;t.add(h);hs.push(h)}
+const seat=new THREE.Object3D();seat.position.set(0,.5,0);hs[0].add(seat);return{g,seat,up:tt=>{t.rotation.y=tt*.7;hs.forEach((h,i)=>h.position.y=2.5+Math.sin(tt*1.5+i*1.6)*1.3);rs.forEach(r=>r.rotation.y=tt*15)}}});
+addRide("Roller Coaster",70,"रोलर कोस्टर! हाथ ऊपर करो और चिल्लाओ!",0,0,3,10,()=>{const g=new THREE.Group(),cs=[],P2=a=>[Math.cos(a)*11,3.5+2.5*Math.sin(2*a),Math.sin(a)*7];
+for(let i=0;i<48;i++){const q=P2(i/48*6.283);box(1.1,.3,1.1,0x7048e8,q[0],q[1]-.3,q[2],g);if(i%4==0)box(.3,q[1],.3,0x555555,q[0],q[1]/2-.3,q[2],g)}
+for(let i=0;i<3;i++){const c=new THREE.Group();box(1.4,.7,2,i?0xfab005:0xe03131,0,.4,0,c);g.add(c);cs.push(c)}
+const seat=new THREE.Object3D();seat.position.set(0,.8,0);cs[1].add(seat);
+return{g,seat,up:t=>cs.forEach((c,i)=>{const a=t*.7-i*.25,q=P2(a),r=P2(a+.02);c.position.set(q[0],q[1],q[2]);c.rotation.y=Math.atan2(r[0]-q[0],r[2]-q[2])})}});
+addRide("Drop Tower",50,"ड्रॉप टॉवर! ऊपर से सीधा नीचे, दिल थाम के!",0,0,1.5,6,()=>{const g=new THREE.Group(),c=new THREE.Group();box(1.4,22,1.4,0xe03131,0,11,0,g);box(3,.4,3,0xffd43b,0,22.3,0,g);g.add(c);cy(2,2,.4,0x7048e8,0,0,0,c,16);
+const seat=new THREE.Object3D();seat.position.set(1.8,.3,0);seat.rotation.y=-Math.PI/2;c.add(seat);
+return{g,seat,lh:27,up:t=>{const p=t%9;c.position.y=p<5?p/5*18:p<6?18:p<6.6?18*(1-(p-6)/.6):.3}}});
+addRide("Tora Tora",45,"तोरा तोरा! झूलो झूलो, घूमो घूमो!",0,0,3,8,()=>{const g=new THREE.Group(),p=new THREE.Group(),d=new THREE.Group();p.position.y=10;g.add(p);d.position.y=-8;p.add(d);box(.4,8,.4,0x888888,0,-4,0,p);
+box(.6,.6,10,0x7048e8,0,10,0,g);[-4,4].forEach(z=>[-1,1].forEach(s=>box(.5,10.4,.5,0x7048e8,s*1.4,5,z,g).rotation.z=s*.27));cy(3.2,3.2,.4,0xfab005,0,0,0,d,24);let seat;
+for(let i=0;i<6;i++){const a=i/6*6.283,s=new THREE.Object3D(),x=Math.cos(a)*2.4,z=Math.sin(a)*2.4;s.position.set(x,.2,z);d.add(s);box(.9,.3,.9,[0xe03131,0x1c7ed6,0x2f9e44][i%3],x,.35,z,d);if(!i)seat=s}
+return{g,seat,up:t=>{p.rotation.z=Math.sin(t*.9)*1;d.rotation.y=t*1.5}}});
+addRide("Dragon Jhoola",40,"ड्रैगन झूला! कोलंबस झूला, आसमान में उड़ो!",0,0,5,9.5,()=>{const g=new THREE.Group(),p=new THREE.Group(),b=new THREE.Group();p.position.y=12;g.add(p);b.position.y=-10.5;p.add(b);box(.6,.6,8,0x2f9e44,0,12,0,g);[-3.5,3.5].forEach(z=>[-1,1].forEach(s=>box(.5,12.4,.5,0x2f9e44,s*1.5,6,z,g).rotation.z=s*.245));
+box(10,1.2,3,0x2f9e44,0,0,0,b);const h=new THREE.Mesh(new THREE.SphereGeometry(1.3,10,8),M(0xe03131));h.position.set(5.6,1.4,0);b.add(h);box(1.2,.4,.4,0xffd43b,6.8,1.2,0,b);box(1.4,1.4,.2,0xe03131,-5.4,1.2,0,b);[-1,1].forEach(s=>box(.2,10.5,.2,0x999999,s*4,5.2,0,b));
+const seat=new THREE.Object3D();seat.position.set(0,.6,0);seat.rotation.y=Math.PI/2;b.add(seat);return{g,seat,up:t=>{p.rotation.z=Math.sin(t*1.1+1)*1.15}}});
+addRide("Takkar Gaadi",30,"टक्कर गाड़ी! भिड़ाओ भिड़ाओ, जमकर टक्कर मारो!",0,0,8,10.5,()=>{const g=new THREE.Group(),cs=[];cy(8,8,.3,0x444466,0,.15,0,g,32);const w=new THREE.Mesh(new THREE.TorusGeometry(8,.3,6,32),M(0xffd43b));w.rotation.x=Math.PI/2;w.position.y=.8;g.add(w);
+for(let i=0;i<4;i++){const c=new THREE.Group();box(1.6,.6,2.2,[0xe03131,0x1c7ed6,0x2f9e44,0xf06595][i],0,.6,0,c);box(.1,2.5,.1,0x333333,0,1.9,-.8,c);g.add(c);cs.push(c)}
+const seat=new THREE.Object3D();seat.position.set(0,.9,0);cs[0].add(seat);
+return{g,seat,up:t=>cs.forEach((c,i)=>{const r=3+i*1.2,a=t*(.9-i*.12)+i*1.6;c.position.set(Math.cos(a)*r,0,Math.sin(a)*r);c.rotation.y=-a})}});
+addRide("Bhoot Bangla",20,"भूत बंगला! हिम्मत हो तो अंदर आओ... हू हू हू!",0,0,3.5,7,()=>({g:tent(0x333344,"👻"),up(){},show:"भूत बंगले में भूत नहीं निकला, सिर्फ मालिक का बिल निकला! हा हा हा!"}));
+addRide("Sheesh Mahal",20,"शीश महल! एक के दो दो दिखेंगे!",0,0,3.5,7,()=>({g:tent(0x15aabf,"🪞"),up(){},show:"शीशे में दो दो शकल दिखीं, पता नहीं कौन सी असली है!"}));
+/* walking vendors */
+function balloons(p){const g=new THREE.Group();g.position.set(.75,2.1,.3);p.add(g);[0xe03131,0xfab005,0x2f9e44,0x1c7ed6,0xf06595,0x7048e8,0xff922b].forEach((c,i)=>{const a=i/7*6.283,b=new THREE.Mesh(new THREE.SphereGeometry(.42,10,8),M(c));b.scale.y=1.2;b.position.set(Math.cos(a)*.5,2.4+(i%3)*.35,Math.sin(a)*.5);g.add(b);cy(.01,.01,2.4,0xeeeeee,Math.cos(a)*.25,1.2,Math.sin(a)*.25,g,3)})}
+function toys(p){const t=new THREE.Group();t.position.set(.8,2.2,.2);p.add(t);cy(.04,.04,2.6,0x6d4c41,0,1.3,0,t,5);["🧸","🚗","🪁","🪀","🎺"].forEach((e,i)=>{const s=emo(e);s.scale.set(.9,.9,1);s.position.set(i%2?.5:-.5,1+i*.45,0);t.add(s)})}
+const VEND=[];
+[[0xf08c00,balloons,8,18,["🎈","Gubbare Wala",0xff6b6b,"गुब्बारे ले लो गुब्बारे! रंग बिरंगे गुब्बारे!",[["🎈","Gubbara",10],["💖","Dil Wala Gubbara",25],["🌈","Rainbow Gubbara",30]]]],
+[0x1c7ed6,toys,-8,20,["🧸","Khilone Wala",0x20c997,"खिलौने ले लो खिलौने! गाड़ी, गुड़िया, बांसुरी!",[["🚗","Gaadi",80],["🧸","Teddy",150],["🪈","Bansuri",70]]]]].forEach(v=>{const p=person(v[0],0,0xc68642);p.position.set(v[2],0,v[3]);scene.add(p);v[1](p);const s=v[4];s.th=1;s.x=v[2];s.z=v[3];ALL.push(s);VEND.push({p,s,tx:v[2],tz:v[3]})});
+(function sy(){if(!PAUSE())VEND.forEach(v=>{const p=v.p,dx=v.tx-p.position.x,dz=v.tz-p.position.z,d=Math.hypot(dx,dz);if(d<.6){const a=Math.random()*6.283,r=6+Math.random()*28;v.tx=Math.cos(a)*r;v.tz=15+Math.sin(a)*r}else{p.position.x+=dx/d*1.5/60;p.position.z+=dz/d*1.5/60;p.rotation.y=Math.atan2(dx,dz)}v.s.x=p.position.x;v.s.z=p.position.z;walk(p,d>.6,T+1)});requestAnimationFrame(sy)})();
+/* ground sellers (sitting) */
+const GS=[["🍎","Phal Wala",0xe8590c,"ताज़े फल ले लो! केला, सेब, अंगूर!",[["🍌","Kela",20],["🍎","Seb",40],["🍇","Angoor",35]],0],
+["🥬","Sabzi Wali",0x2f9e44,"ताज़ी सब्ज़ी ले लो बहनजी! टमाटर, भिंडी!",[["🍅","Tamatar",15],["🥬","Bhindi",20]],1],
+["💐","Phool Wali",0xf06595,"गजरा, गुलाब, गेंदे के फूल!",[["💐","Gajra",20],["🌹","Gulab",10]],1],
+["🔴","Bindi Wali",0xc92a2a,"बिंदी, सिंदूर, चूड़ी! सुहाग का सामान!",[["🔴","Bindi",10],["📿","Mala",40]],1],
+["🥥","Nariyal Wala",0x2b8a3e,"नारियल पानी! ठंडा मीठा नारियल पानी!",[["🥥","Nariyal Pani",30]],0],
+["👡","Chappal Wala",0x5c7cfa,"चप्पल सस्ते में! ले लो ले लो!",[["👡","Chappal",100,"o",0x8d5524],["🩴","Hawai Chappal",50,"o",0x1c7ed6]],0],
+["🪞","Kangi Aaina",0xae3ec9,"कंघी, शीशा, रुमाल! सब सस्ता!",[["🪞","Aaina",40],["🪮","Kangi",15]],0]];
+GS.forEach((s,k)=>{const q=place(24,116,14,18),g=new THREE.Group();g.position.set(q[0],0,q[1]);g.rotation.y=Math.atan2(-q[0],-q[1])+(rnd()-.5);scene.add(g);s.x=q[0];s.z=q[1];s.th=1;circ.push({x:q[0],z:q[1],r:1.8});
+box(3.4,.06,2.4,s[2],0,.04,1.1,g);s[4].forEach((it,i)=>{const e=emo(it[0]);e.position.set((i-(s[4].length-1)/2)*1.1,.65,1.2);g.add(e)});
+cy(.05,.05,3,0x6d4c41,0,1.6,-.6,g,5);cy(.05,2.2,.7,[0xe03131,0xfab005,0x2f9e44][k%3],0,3.3,-.6,g,12);
+const p=person([0xe03131,0x1c7ed6,0xfab005,0x2f9e44,0xf06595,0xffffff,0x7048e8][k],s[5],[0xc68642,0xb98055,0xe0ac69][k%3]);p.position.set(0,-.85,-.3);p.userData.l.rotation.x=p.userData.r.rotation.x=-1.5;p.userData.a.forEach(a=>a.rotation.x=-.5);g.add(p);ALL.push(s)});
+/* trees + minimap */
+for(let i=0;i<90;i++){const a=i/90*6.283,r=126+rnd()*8,x=Math.cos(a)*r,z=Math.sin(a)*r;if(z>90&&Math.abs(x)<70)continue;cy(.35,.5,3,0x6d4c41,x,1.5,z,scene,6);const t=new THREE.Mesh(new THREE.SphereGeometry(2.2,8,6),M(0x2f7d32));t.position.set(x,4.5,z);scene.add(t)}
+const mm=$("mm").getContext("2d");setInterval(()=>{if(!P)return;const S=110/270,c=55,d=(x,z,col,r)=>{mm.fillStyle=col;mm.beginPath();mm.arc(c+x*S,c+z*S,r,0,6.283);mm.fill()};mm.clearRect(0,0,110,110);d(0,0,"rgba(0,0,0,.4)",54);rides.forEach(r=>d(r.x,r.z,"#ff922b",3));ALL.forEach(s=>d(s.x,s.z,s.th?"#69db7c":"#74c0fc",2));PAR.forEach(p=>p.visible&&d(p.position.x,p.position.z,"#ff3b3b",3.5));d(FR.position.x,FR.position.z,"#ffd43b",3);d(P.position.x,P.position.z,"#fff",3.5)},250);
+/* ===== v7: pro 3D UI (menu avatars, wardrobe, character, map, daily reward, bike/run/jump, settings drawer) ===== */
+const LS2=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d}},SV=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+let CU=LS2("mela_cu",{g:0,skin:0xd9a066,hair:0x151515,shoe:0x222222,shirt:{0:0x1971c2,1:0xe64980}}),OWN=LS2("mela_own",{}),EQ=LS2("mela_eq",{}),XP=LS2("mela_xp",0),lang="hi",RUN=false,biking=false,BRK=false,JV=0,JY=0,BKCOL=0xe03131,ctlBtn=false,MV="home",MBK=null,rate=0;
+function cls(id){$(id).style.display="none"}function UIOPEN(){return ["store","sett","ck","adv","don","pg","rew","dly","map","shp","chr"].some(i=>$(i).style.display=="flex")||document.body.classList.contains("dopen")}
+/* ---------- menu avatars + camera ---------- */
+const MCAM={home:[0,3.8,24,0,3,8],front:[0,2.9,9.5,0,2.3,16]};
+function menuCam(dt){const c=MCAM[MV],sw=MV=="home"?Math.sin(T*.4)*2:0;cam.position.lerp(new V(c[0]+sw,c[1],c[2]),1-Math.exp(-dt*3));cam.lookAt(c[3],c[4],c[5])}
+function putOn(p,it){const t=it[3],c=it[4];if(t=="s")p.userData.shirt.color.setHex(c);else if(t=="o")p.userData.shoe.color.setHex(c);else if(t=="h"){p.userData.hat.visible=true;p.userData.hat.material.color.setHex(c)}else if(t=="v")BKCOL=c;else wearAcc(it,p)}
+function applyTo(p,g){const u=p.userData;u.skin.color.setHex(CU.skin);u.hair.color.setHex(CU.hair);if(u.hair2)u.hair2.color.setHex(CU.hair);u.shoe.color.setHex(CU.shoe);u.shirt.color.setHex(CU.shirt[g]);u.hat.visible=false;if(u.wr)for(const t in u.wr){u.wr[t].forEach(m=>m.parent&&m.parent.remove(m));u.wr[t]=[]}Object.values(EQ).forEach(it=>it&&putOn(p,it))}
+const MBY=person(0x1971c2,0,0xd9a066,0x151515),MGL=person(0xe64980,1,0xd9a066,0x151515),MA=[MBY,MGL];MA.forEach(a=>{a.rotation.y=Math.PI;scene.add(a)});
+function avRefresh(){applyTo(MBY,0);applyTo(MGL,1)}
+function avLayout(m){const sel=MA[CU.g];MBY.position.set(-1.4,0,16);MGL.position.set(1.4,0,16);if(m=="shop"){MA.forEach(a=>a.visible=a===sel);sel.position.set(0,0,16)}else MA.forEach(a=>a.visible=true);MV=m=="home"?"home":"front"}
+avRefresh();avLayout("home");
+(function av(){requestAnimationFrame(av);if(phase=="menu")MA.forEach((a,i)=>walk(a,MV=="home",T+i*.7))})();
+function startUI(g){document.body.classList.add("intro");chase.next=[40,30,22][DIF];MA.forEach(a=>a.visible=false);document.body.classList.remove("menu");document.body.classList.add("ingame");applyTo(P,g?1:0);$("pav").textContent=g?"👧":"🧑"}
+/* ---------- wardrobe shop (design screen 3) ---------- */
+const EMJ={s:"👕",q:"🕶️",w:"⌚",n:"📿",h:"👑",b:"💍",e:"💎",g:"🌸",v:"🏍️",o:"👟",store:"💳"},WB=a=>a.map(x=>[EMJ[x[2]],x[0],x[1],x[2],x[3]]);
+const WS={Clothes:[WB([["Blue Hoodie",500,"s",0x1971c2],["Red Hoodie",500,"s",0xe03131],["Black Jacket",800,"s",0x212529],["Yellow Jacket",800,"s",0xfab005],["Green Kurta",1000,"s",0x2f9e44],["White Kurta",1200,"s",0xf1f3f5]]),WB([["Pink Top",500,"s",0xf06595],["Purple Dress",500,"s",0x9c36b5],["Red Lehnga",800,"s",0xe03131],["Yellow Suit",800,"s",0xfab005],["Teal Dress",1000,"s",0x15aabf],["White Saree",1200,"s",0xf1f3f5]])],
+Accessories:[WB([["Sunglasses",300,"q",0x111111],["Watch",400,"w",0xc0c0c0],["Gold Chain",600,"n",0xffd43b],["Red Cap",350,"h",0xe03131],["Pagdi",700,"h",0xff922b],["Crown",1500,"h",0xffd43b]]),WB([["Sunglasses",300,"q",0x111111],["Bangles",400,"b",0xe03131],["Jhumke",500,"e",0xffd43b],["Necklace",600,"n",0xffd43b],["Gajra",350,"g",0xffffff],["Crown",1500,"h",0xffd43b]])],
+Vehicles:[WB([["Red Bike",0,"v",0xe03131],["Blue Bike",600,"v",0x1971c2],["Golden Bike",1500,"v",0xffd43b],["Green Bike",600,"v",0x2f9e44],["Black Bike",900,"v",0x212529],["Pink Bike",700,"v",0xf06595]])],
+Others:[WB([["White Shoes",300,"o",0xf1f3f5],["Red Shoes",400,"o",0xe03131],["Blue Shoes",400,"o",0x1971c2],["Black Boots",600,"o",0x212529],["Gold Shoes",900,"o",0xffd43b],["Premium Store",0,"store",0x7048e8]])]};
+let shT="Clothes",shSel=null;const shItems=()=>{const d=WS[shT];return d.length==2?d[CU.g]:d[0]},hex=c=>"#"+c.toString(16).padStart(6,"0");
+function openShop2(){if(phase=="menu")avLayout("shop");shT="Clothes";shSel=null;$("shp").style.display="flex";drawShop()}
+function closeShop2(){cls("shp");if(phase=="menu"){avRefresh();avLayout("home")}else applyTo(P,CU.g)}
+function drawShop(){$("shpt").innerHTML=["Clothes","Accessories","Vehicles","Others"].map(t=>"<button class='"+(t==shT?"on":"")+"' onclick=\"shT='"+t+"';shSel=null;drawShop()\">"+t+"</button>").join("");
+$("shpg").innerHTML=shItems().map((it,i)=>{const own=OWN[it[1]]||it[2]==0;return"<div class='tile"+(shSel===i?" sel":"")+"' onclick='shPick("+i+")'><div class='tv' style='background:"+hex(it[4])+"'>"+(it[3]=="s"&&CU.g?"👗":it[0])+"</div><div class='pr'>"+(it[3]=="store"?"Open":own?"✔ Owned":"🪙 "+it[2])+"</div></div>"}).join("");
+const it=shSel!=null&&shItems()[shSel];$("shpbuy").textContent=!it?"Select item":(OWN[it[1]]||it[2]==0)?"Wear":"Buy 🪙 "+it[2]}
+function shPick(i){shSel=i;const it=shItems()[i];if(it[3]=="store")return openStore();putOn(shTgt(),it);drawShop()}
+$("shpbuy").onclick=()=>{const it=shSel!=null&&shItems()[shSel];if(!it)return;if(!(OWN[it[1]]||it[2]==0)){if(wal<it[2])return toast("Coins kam hain 😅");wal-=it[2];hud();OWN[it[1]]=1;SV("mela_own",OWN)}EQ[it[3]]=it;SV("mela_eq",EQ);putOn(shTgt(),it);toast("✔ "+it[1]);sfx("coin");drawShop()};
+/* ---------- character screen (design screen 8) ---------- */
+let chT="Boy";const HAIR=[0x151515,0x4a2c12,0x8d5524,0xe8c07a,0xc92a2a,0x7048e8],SKIN=[0xf1c9a5,0xd9a066,0xc68642,0x8d5524,0xe0ac69,0x5c3a21],SHOES=[0x222222,0xf1f3f5,0xe03131,0x1971c2,0xfab005,0x2f9e44],SHI=[[0x1971c2,0x2f9e44,0xe03131,0xfab005,0x7048e8,0x15aabf],[0xe64980,0x9c36b5,0xf06595,0xfab005,0x15aabf,0xe03131]];
+const chList=()=>chT=="Hair"?HAIR:chT=="Face"?SKIN:chT=="Shoes"?SHOES:SHI[CU.g];
+function openChar(){if(phase!="menu")return;chT=CU.g?"Girl":"Boy";avLayout("char");$("cname").value=$("pn2").value||"Player01";$("chr").style.display="flex";drawChar()}
+function drawChar(){$("chrt").innerHTML=["Boy","Girl","Hair","Face","Shoes"].map(t=>"<button class='"+(t==chT?"on":"")+"' onclick=\"chT='"+t+"';"+(t=="Boy"?"CU.g=0;":t=="Girl"?"CU.g=1;":"")+"drawChar()\">"+t+"</button>").join("");
+const key=chT=="Hair"?"hair":chT=="Face"?"skin":chT=="Shoes"?"shoe":"shirt",cur=key=="shirt"?CU.shirt[CU.g]:CU[key];$("chrg").innerHTML=chList().map((c,i)=>"<div class='tile"+(c==cur?" sel":"")+"' onclick='cuPick("+i+")'><div class='sw' style='background:"+hex(c)+"'></div></div>").join("")}
+function cuPick(i){const c=chList()[i];if(chT=="Hair")CU.hair=c;else if(chT=="Face")CU.skin=c;else if(chT=="Shoes")CU.shoe=c;else CU.shirt[CU.g]=c;avRefresh();drawChar()}
+function closeChar(cancel){if(cancel)CU=LS2("mela_cu",CU);else{SV("mela_cu",CU);$("pn2").value=($("cname").value||"Player01").slice(0,14)}$("sg").value=CU.g?"g":"b";$("pnm").textContent=$("pn2").value;$("pav").textContent=CU.g?"👧":"🧑";avRefresh();avLayout("home");cls("chr")}
+/* ---------- daily reward, special offer, rewards, map ---------- */
+const DRW=[500,1000,1500,2000,3000,5000,7000],dayStr=d=>d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
+function drState(){const s=LS2("mela_dr",{streak:0,last:""}),t=dayStr(new Date()),y=dayStr(new Date(Date.now()-864e5));return{s,t,claimed:s.last==t,next:s.last==t?s.streak:s.last==y?(s.streak%7)+1:1}}
+function openDly(){const st=drState();let h='<div class="dgrid">';for(let i=1;i<=7;i++){const done=st.claimed?i<=st.s.streak:i<st.next;h+='<div class="dd'+(i==st.next&&!st.claimed?" cur":"")+'"><b>Day '+i+'</b><div class="di">'+(done?"✅":i==7?"🌟":"🪙")+'</div><span>₹'+DRW[i-1]+'</span></div>'}
+$("dlyb").innerHTML=h+'</div><p style="text-align:center"><button class="gb" '+(st.claimed?"disabled":"")+' onclick="claimDly()">'+(st.claimed?"Kal phir aana":"Claim Day "+st.next)+'</button></p>';$("dly").style.display="flex"}
+function claimDly(){const st=drState();if(st.claimed)return;SV("mela_dr",{streak:st.next,last:st.t});wal+=DRW[st.next-1];hud();sfx("coin");toast("🎁 Day "+st.next+": ₹"+DRW[st.next-1]+" mil gaye!");addXp(50);dlyDot();openDly()}
+const dlyDot=()=>{$("rcol").querySelector(".dot").style.display=drState().claimed?"none":"block"};dlyDot();
+function offerEnd(){let e=LS2("mela_offer",0);if(!e||e<Date.now()){e=Date.now()+864e5;SV("mela_offer",e)}return e}
+setInterval(()=>{const r=Math.max(0,offerEnd()-Date.now()),f=n=>String(n).padStart(2,"0");$("otm").textContent=f(r/36e5|0)+":"+f(r/6e4%60|0)+":"+f(r/1e3%60|0)},1000);
+function openRew(){$("rewb").innerHTML="<h3>🎯 Missions</h3>"+MS.map((m,i)=>"<div class='it'><b>"+(i<mi?"✅ ":"▫️ ")+m.t+"</b><span>🪙 "+m.r+"</span></div>").join("")+"<h3>🏆 Top Donors</h3>"+(DON.top.slice(0,10).map((d,i)=>"<div class='it'><b>"+(i+1)+". "+esc(d.name)+"</b><span>₹"+d.amount+"</span></div>").join("")||"<p>Abhi koi daani nahi. Pehle donor aap bano!</p>")+"<p style='text-align:center'><button class='gb' onclick=\"cls('rew');lastPole=ALL.find(s=>s.don);openDonate()\">💝 Donate</button></p>";$("rew").style.display="flex"}
+function openMap(){const c=$("mapc"),x=c.getContext("2d"),W=300,H=410,mx=v=>(v+135)*W/270,mz=v=>(v+110)*H/365;x.fillStyle="#3f7d3a";x.fillRect(0,0,W,H);x.fillStyle="#c9a574";x.beginPath();x.arc(mx(0),mz(0),130*W/270,0,6.283);x.fill();x.fillStyle="#8a7d6b";x.fillRect(mx(-70),mz(128),140*W/270,120*H/365);x.fillStyle="#3a3a44";x.fillRect(mx(-9),mz(128),18*W/270,122*H/365);
+x.fillStyle="#fff";x.font="bold 11px sans-serif";x.textAlign="center";x.fillText("MAIN GATE",mx(0),mz(131));x.fillText("PARKING",mx(40),mz(205));x.fillText("PATAKE BAZAAR",mx(-34),mz(143));x.fillText("BAZAAR GALI",mx(0),mz(86));
+const dot=(px,pz,col,r,t)=>{x.fillStyle=col;x.beginPath();x.arc(mx(px),mz(pz),r,0,6.283);x.fill();x.strokeStyle="#fff";x.lineWidth=1.5;x.stroke();if(t){x.fillStyle="#fff";x.font="9px sans-serif";x.fillText(t,mx(px),mz(pz)-r-2)}};
+rides.forEach(r=>dot(r.x,r.z,"#ff922b",5,r.n.split(" ")[0]));ALL.forEach(s=>{if(s.don)dot(s.x,s.z,"#ffd43b",7,"DONATE");else if(!VEND.some(v=>v.s===s))dot(s.x,s.z,s.th?"#69db7c":"#4dabf7",3)});if(P)dot(P.position.x,P.position.z,"#ff3b3b",6,"YOU");$("map").style.display="flex"}
+$("mm").onclick=openMap;
+/* ---------- level / xp ---------- */
+const L9={hi:{play:"Start",shop:"शॉप",rewards:"रिवॉर्ड्स",map:"मैप",daily:"डेली रिवॉर्ड",offer:"स्पेशल ऑफर",level:"लेवल",run:"दौड़ो",jump:"कूदो",bike:"बाइक",brake:"ब्रेक",exit:"उतरो",settings:"सेटिंग्स"},en:{play:"Start",shop:"Shop",rewards:"Rewards",map:"Map",daily:"Daily Reward",offer:"Special Offer",level:"Level",run:"Run",jump:"Jump",bike:"Bike",brake:"Brake",exit:"Exit",settings:"Settings"}};
+const lvl=()=>1+Math.floor(XP/300);function plv(){$("plv").textContent=L9[lang].level+" "+lvl();$("xpf").style.width=(XP%300)/3+"%"}
+function addXp(n){if(!n)return;const o=lvl();XP+=n;SV("mela_xp",XP);plv();if(lvl()>o){toast("🎉 Level "+lvl()+"!");sfx("coin")}}
+const _t3=track;track=(ev,d)=>{_t3(ev,d);addXp({ride:20,buy:10,burn:30,park:5,blast:40,donate:100}[ev]||0)};
+function setLang(l){lang=l;document.querySelectorAll("[data-i]").forEach(e=>{const t=L9[l][e.dataset.i];if(t)e.textContent=t});plv()}
+/* ---------- run / jump / bike / dpad ---------- */
+const SPD=()=>biking?(BRK?0:18):(RUN?17:9);
+function setBike(on){biking=on;document.body.classList.toggle("bk",on);if(on){if(!MBK){MBK=mkBike(BKCOL);MBK.position.set(0,-.3,-.25);P.add(MBK)}MBK.userData.bm.color.setHex(BKCOL);MBK.visible=true}else if(MBK)MBK.visible=false;if(!on&&!riding)P.position.y=JY}
+$("bBike").onclick=()=>{if(phase=="play"&&!riding)setBike(true)};$("bExit").onclick=()=>setBike(false);
+$("bRun").onclick=()=>{RUN=!RUN;$("bRun").classList.toggle("on",RUN);toast(RUN?"🏃 Run ON":"Walk")};
+$("bJump").onclick=()=>{if(JY<=.01&&phase=="play"&&!riding){JV=8;tone(500,.15,"sine",.1,900)}};
+$("bBrake").onpointerdown=()=>{BRK=true};["pointerup","pointerleave","pointercancel"].forEach(e=>$("bBrake").addEventListener(e,()=>{BRK=false}));
+document.querySelectorAll("#dpad b").forEach(b=>{const k=b.dataset.k;b.onpointerdown=e=>{keys[k]=1;b.setPointerCapture(e.pointerId)};b.onpointerup=b.onpointercancel=()=>{keys[k]=0}});
+(function ph(ms){requestAnimationFrame(ph);const dt=Math.min((ms-(ph.l||ms))/1000,.05);ph.l=ms;
+try{fm.position.y=6.2+Math.sin(T*5)*.35}catch(e){}if(phase!="play")return;if(JY>0||JV!=0){JV-=24*dt;JY=Math.max(0,JY+JV*dt);if(JY==0&&JV<0)JV=0}
+if(!riding){P.position.y=(biking?.3:0)+JY;if(biking){const u=P.userData;u.l.rotation.x=u.r.rotation.x=-1.1;u.a.forEach(a=>a.rotation.x=-1.1);if(MBK&&!BRK&&(Math.hypot(jx,jz)>.1||keys.w||keys.s||keys.a||keys.d))MBK.userData.w.forEach(w=>w.rotation.x-=dt*18)}}else if(biking)setBike(false)})();
+/* ---------- settings drawer ---------- */
+function openDrw(){document.body.classList.add("dopen");segs()}function closeDrw(){document.body.classList.remove("dopen")}function openSett(){openDrw()}
+function segs(){const on=(id,v)=>$(id).classList.toggle("on",v);document.querySelectorAll("#sg_cam button").forEach((b,i)=>b.classList.toggle("on",i==camMode));on("sMus",mOn);$("sMus").textContent="Music "+(mOn?"ON":"OFF");on("sSfx",!SFXOFF);$("sSfx").textContent="SFX "+(SFXOFF?"OFF":"ON");document.querySelectorAll("#sVL button").forEach((b,i)=>b.classList.toggle("on",i==VL));on("cJoy",!ctlBtn);on("cBtn",ctlBtn)}
+function setVL(v){VL=v;voice=v>0;if(!v&&window.speechSynthesis)speechSynthesis.cancel();$("bv").textContent=v?"🔊":"🔇";segs();toast("Voice: "+["Off","Low","Normal","High"][v])}
+function setCtl(m){ctlBtn=!!m;document.body.classList.toggle("btnctl",ctlBtn);segs()}
+$("bv").onclick=()=>setVL(VL?0:2);
+$("stars").innerHTML=[1,2,3,4,5].map(i=>"<button class='st' onclick='rateSet("+i+")'>☆</button>").join("");
+function rateSet(n){rate=n;document.querySelectorAll("#stars .st").forEach((b,i)=>b.textContent=i<n?"★":"☆")}
+function sendFb2(){const t=$("fbt2").value.trim();if(!t&&!rate)return toast("Rating ya feedback likho");track("feedback",{item:(rate?"★"+rate+" ":"")+t.slice(0,280)});$("fbt2").value="";rateSet(0);toast("Shukriya! Feedback mil gaya 🙏");closeDrw()}
+$("pgrow2").innerHTML=Object.keys(PGS).map(k=>"<button class='gb sm' onclick=\"openPage('"+k+"')\">"+k+"</button>").join("");
+/* ---------- friend Chintu: rare, unique look ---------- */
+FR.visible=false;FRS.n=0;FRS.t=0;FRS.next=60;FRS.vt=0;FR.userData.shirt.color.setHex(0xe03131);FR.userData.hat.material.color.setHex(0xffd43b);box(1,1.4,.1,0x7048e8,0,1.6,-.4,FR);box(.72,.16,.1,0x111111,0,2.5,.38,FR);frl.visible=false;
+const fm=emo("❗");fm.scale.set(2.2,2.2,1);FR.add(fm);const fl2=new THREE.Sprite(new THREE.SpriteMaterial({map:sign("DOST CHINTU - DUR RAHO",0xc92a2a),fog:false}));fl2.scale.set(9,2.2,1);fl2.position.y=5.2;FR.add(fl2);
+setInterval(()=>{if(phase!="play"||UIOPEN())return;FRS.t+=.5;
+if(!FR.visible){if(FRS.n<2&&FRS.t>FRS.next){const q=place(30,100,0,12);FR.position.set(q[0],0,q[1]);FRS.tx=q[0];FRS.tz=q[1];frp[0]=q[0];frp[1]=q[1];FR.visible=true;FRS.cd=0;FRS.call=0;FRS.done=0;FRS.vt=0;toast("👀 Dost Chintu mela me aaya hai! Uske paas mat jana, wo Mummy-Papa ko bula lega!");say("अरे यार, मैं भी मेले में आ गया!",1.4)}}
+else{FRS.vt+=.5;if((FRS.done&&FRS.call<=0)||FRS.vt>70){FR.visible=false;FRS.t=0;FRS.next=80+Math.random()*30;if(FRS.vt>70&&!FRS.done)FRS.n++;FRS.done=0;toast("Dost Chintu mela se chala gaya")}}},500);
+/* ---------- clear, static leaderboard faces ---------- */
+function drawBoard(){const dr=(c,title,sub)=>{const x=c.getContext("2d"),g=x.createLinearGradient(0,0,0,800);g.addColorStop(0,"#0a1a5c");g.addColorStop(1,"#2a1d86");x.fillStyle=g;x.fillRect(0,0,640,800);x.strokeStyle="#ffd43b";x.lineWidth=14;x.strokeRect(7,7,626,786);x.textAlign="center";x.textBaseline="alphabetic";x.fillStyle="#ffd43b";x.font="bold 52px sans-serif";x.fillText(title,320,84);x.fillStyle="#cfe0ff";x.font="26px sans-serif";x.fillText(sub,320,126);return x};
+let x=dr(cvT,"TOP DONORS","Sabse bade daani");const L=DON.top;
+for(let i=0;i<8;i++){const y=150+i*78,d=L[i];x.fillStyle=i%2?"rgba(255,255,255,.08)":"rgba(255,255,255,.16)";x.fillRect(24,y,592,68);x.textBaseline="middle";x.fillStyle=i<3?["#ffd43b","#d8dde6","#e29a5a"][i]:"#8fb0ff";x.beginPath();x.arc(66,y+34,24,0,6.283);x.fill();x.fillStyle="#0a1a5c";x.font="bold 30px sans-serif";x.textAlign="center";x.fillText(String(i+1),66,y+36);x.textAlign="left";x.fillStyle="#fff";x.font="bold 38px sans-serif";x.fillText(d?String(d.name).slice(0,13):"---",110,y+36);if(d){x.textAlign="right";x.fillStyle="#ffd43b";x.fillText("₹"+d.amount,600,y+36)}}
+x.textBaseline="alphabetic";x.textAlign="center";x.fillStyle="#ffe8a3";x.font="22px sans-serif";x.fillText("Donate: pole ke paas jao, button dabao",320,782);txT.needsUpdate=true;
+x=dr(cvS,"MORE DONORS","Rank 9 se 22");for(let i=0;i<14;i++){const c=i<7?0:1,r=i%7,px=22+c*312,y=150+r*92,d=L[8+i];x.fillStyle="rgba(255,255,255,"+(r%2?.08:.16)+")";x.fillRect(px,y,296,82);x.textBaseline="middle";x.textAlign="left";x.fillStyle="#8fb0ff";x.font="bold 26px sans-serif";x.fillText(String(i+9),px+10,y+22);x.fillStyle="#fff";x.font="bold 28px sans-serif";x.fillText(d?String(d.name).slice(0,10):"---",px+52,y+22);x.fillStyle="#ffd43b";x.font="26px sans-serif";x.fillText(d?"₹"+d.amount:"",px+52,y+58)}txS.needsUpdate=true}
+function boardCam(dt){const q=boardView.pole;boardView.t-=dt;let dx=P.position.x-q.x,dz=P.position.z-q.z;if(Math.abs(dz)>=Math.abs(dx)){dx=0;dz=Math.sign(dz)||1}else{dz=0;dx=Math.sign(dx)}cam.position.lerp(new V(q.x+dx*34,24,q.z+dz*34),1-Math.exp(-dt*4));cam.lookAt(q.x,28,q.z)}
+drawBoard();
+CAT.push({id:"starter",t:"coins",n:"🎁 Starter Pack",d:"Shield x3 + Slow x5 + ₹2000 coins",p:49,st:1,v:2000});
+/* ---------- init ---------- */
+$("pn2").value="Player01";$("sg").value=CU.g?"g":"b";$("pnm").textContent="Player01";$("pav").textContent=CU.g?"👧":"🧑";setLang("hi");segs();
+/* ===== v8: pause menu, run stamina, difficulty, funny music, donation board fix, coins, lucky spin, more shops ===== */
+let DIF=LS2("mela_dif",0),bgNms=0,spinning=false;const PSPD=[1,1.7,2.35],RN={st:"ready",p:1,t:0};
+function PAUSE(){return phase!="menu"&&UIOPEN()}
+function UIOPEN(){return ["store","sett","ck","adv","don","pg","rew","dly","map","shp","chr","spn","ask"].some(i=>$(i).style.display=="flex")||document.body.classList.contains("dopen")||document.body.classList.contains("mopen")||$("scn").style.display=="block"}
+function askOk(t,cb){$("askt").textContent=t;$("asky").onclick=()=>{cls("ask");cb()};$("ask").style.display="flex"}
+const shTgt=()=>phase=="menu"?MA[CU.g]:P;
+/* ---------- slide menu (square tiles) ---------- */
+const MT=[["🏪","Shop","openShop2()"],["🏆","Rewards","openRew()"],["🗺️","Map","openMap()"],["🎁","Daily Reward","openDly()"],["⭐","Special Offer","openStore()"],["👑","VIP","openStore()"],["🎰","Lucky Spin","openSpin()"],["🎵","Music",0],["🔊","Voice",0],["👥","Friends",0],["🎁","Free ₹500","$('br').click()"],["⚙️","Settings","openDrw()"]];
+function renderMnu(){$("mnug").innerHTML=MT.map(t=>{let lab=t[1],act=t[2]?"closeMnu();"+t[2]:"",tog="";if(t[1]=="Music"){lab="Music "+(mOn?"ON":"OFF");act="$('bm').click();renderMnu()"}if(t[1]=="Voice"){lab="Voice "+(VL?"ON":"OFF");act="$('bv').click();renderMnu()"}if(t[1]=="Friends"){lab="Friends "+friends;act="$('bf').click();renderMnu()"}if(t[1]=="Special Offer")lab="Offer "+$("otm").textContent;return"<button class='mt' onclick=\""+act+"\"><i>"+t[0]+"</i><span>"+lab+"</span></button>"}).join("")}
+function openMnu(){renderMnu();document.body.classList.add("mopen")}function closeMnu(){document.body.classList.remove("mopen")}
+/* ---------- run with stamina: 7s run, 5s refill ---------- */
+function startRun(){if(RN.st!="ready"){toast(RN.st=="run"?"Daud rahe ho!":"😮‍💨 Thak gaye! Refill ho raha hai...");return}RN.st="run";RN.t=0;RUN=true;noise(.35,.12,900);toast("🏃 Daudo! 7 second")}
+$("bRun").onclick=startRun;
+(function rs2(ms){requestAnimationFrame(rs2);const dt=Math.min((ms-(rs2.l||ms))/1000,.05);rs2.l=ms;if(phase!="play"||PAUSE())return;
+if(RN.st=="run"){RN.t+=dt;RN.p=Math.max(0,1-RN.t/7);if(RN.t>=7){RN.st="cool";RN.t=0;RUN=false;toast("😮‍💨 Thak gaye! 5 second refill")}}
+else if(RN.st=="cool"){RN.t+=dt;RN.p=Math.min(1,RN.t/5);if(RN.t>=5){RN.st="ready";RN.p=1;toast("✅ Run ready!")}}
+if(keys.shift&&RN.st=="ready")startRun();if(P){P.rotation.x=RUN&&(Math.hypot(jx,jz)>.1||keys.w||keys.s||keys.a||keys.d)?.28:0}const fv=RUN?74:60;if(Math.abs(cam.fov-fv)>.1){cam.fov+=(fv-cam.fov)*.15;cam.updateProjectionMatrix()}const b=$("bRun");b.style.setProperty("--p",RN.p*100);b.classList.toggle("cool",RN.st=="cool")})();
+/* ---------- difficulty ---------- */
+function setDif(i){DIF=i;SV("mela_dif",i);document.querySelectorAll("#difb button,#sDif button").forEach((b,j)=>b.classList.toggle("on",j%3==i));toast("Level: "+["Normal","Medium","Hard"][i])}
+document.querySelectorAll("#difb button,#sDif button").forEach((b,j)=>b.classList.toggle("on",j%3==DIF));
+/* ---------- soft, funny mela music: 12 tracks, switch every 30-35s ---------- */
+let MST=null,BUS=null;
+function mst(){if(!MST){const c=A();MST=c.createBiquadFilter();MST.type="lowpass";MST.frequency.value=3400;const g=c.createGain();g.gain.value=.85;MST.connect(g).connect(c.destination)}return MST}
+function bus(){if(!BUS){const c=A();BUS=c.createBiquadFilter();BUS.type="lowpass";BUS.frequency.value=2800;const g=c.createGain();g.gain.value=.5;BUS.connect(g).connect(c.destination)}return BUS}
+function tone(f,d,ty,v,sl){if(SFXOFF&&!inBG)return;try{const c=A(),o=c.createOscillator(),g=c.createGain(),t=c.currentTime,hard=ty=="square"||ty=="sawtooth";o.type=hard?"triangle":(ty||"sine");o.frequency.setValueAtTime(f,t);if(sl)o.frequency.exponentialRampToValueAtTime(sl,t+d);g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime((v||.2)*(hard?.7:1),t+.012);g.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(g).connect(mst());o.start(t);o.stop(t+d+.02)}catch(e){}}
+function noise(d,v,hp){if(SFXOFF&&!inBG)return;try{const c=A(),b=c.createBuffer(1,c.sampleRate*d,c.sampleRate),a=b.getChannelData(0);for(let i=0;i<a.length;i++)a[i]=Math.random()*2-1;const s=c.createBufferSource(),g=c.createGain(),f=c.createBiquadFilter();f.type="highpass";f.frequency.value=Math.min(hp||1500,3000);g.gain.setValueAtTime((v||.15)*.8,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+d);s.buffer=b;s.connect(f).connect(g).connect(mst());s.start()}catch(e){}}
+function bt(f,d,ty,v,att,sl){try{const c=A(),o=c.createOscillator(),g=c.createGain(),t=c.currentTime;o.type=ty||"sine";o.frequency.setValueAtTime(f,t);if(sl)o.frequency.exponentialRampToValueAtTime(sl,t+d);g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(v,t+(att||.015));g.gain.exponentialRampToValueAtTime(.0008,t+d);o.connect(g).connect(bus());o.start(t);o.stop(t+d+.03)}catch(e){}}
+function bn(d,v,fq,q){try{const c=A(),n=c.sampleRate*d,b=c.createBuffer(1,n,c.sampleRate),a=b.getChannelData(0);for(let i=0;i<n;i++)a[i]=(Math.random()*2-1)*(1-i/n);const s=c.createBufferSource(),f=c.createBiquadFilter(),g=c.createGain();f.type="bandpass";f.frequency.value=fq||2000;f.Q.value=q||1;g.gain.value=v;s.buffer=b;s.connect(f).connect(g).connect(bus());s.start()}catch(e){}}
+const NN=(a,s)=>a[Math.floor(s)%a.length];
+const BG2=[
+s=>{const b=s%8;if(b==0||b==3||b==4)bt(90,.28,"sine",.5,.004,46);if(b==0||b==4)bn(.06,.25,900);if(b%2)bn(.04,.12,3000);if(b==6)bt(150,.12,"sine",.25,.004,110)},
+s=>{const f=NN([392,415.3,493.9,523.3,493.9,415.3,392,329.6],s/4);if(s%16==0){bt(130.8,3.6,"sine",.1,.3);bt(196,3.6,"sine",.07,.3)}if(s%4==0){bt(f,.95,"triangle",.07,.06);bt(f*1.006,.95,"triangle",.05,.06)}if(s%8==0)bt(98,.25,"sine",.35,.004,50)},
+s=>{const f=NN([262,330,392,330,294,370,440,370],s);bt(f*(s%2?1:.5),.14,"sine",.16,.005);if(s%16==15)bt(200,.45,"sine",.2,.02,900);if(s%8==0)bt(65,.2,"triangle",.25,.004)},
+s=>{const b=s%4;if(b==0||b==2)bt(NN([98,110,131,110],s/4),.3,"triangle",.3,.01);else{const r=NN([196,220,262,220],s/4);bt(r,.18,"triangle",.1,.01);bt(r*1.25,.18,"triangle",.08,.01)}if(s%16==14)bt(900,.4,"sine",.1,.02,300)},
+s=>{const f=NN([392,440,494,587,494,440],s/6);if(s%6==0){bt(f,1.3,"sine",.1,.08);bt(f*2,1.3,"sine",.02,.08)}if(s%4==0)bt(220,.1,"sine",.18,.003,150);if(s%4==2)bt(420,.05,"triangle",.07,.003)},
+s=>{const b=s%4;if(b==0)bt(95,.18,"sine",.5,.003,50);if(b==2)bn(.05,.2,1200);bt(NN([330,392,440,392],s/2),.1,"triangle",.09,.004);if(s%2)bn(.03,.1,3500)},
+s=>{const b=s%6,f=NN([523,659,784,659,784,1047],s);if(b==0)bt(131,.5,"sine",.25,.01);else bt(f,.4,"sine",.1,.004)},
+s=>{if(s%8==0)[[262,330,392],[349,440,523],[294,370,440],[392,494,587]][Math.floor(s/8)%4].forEach(f=>bt(f,1.7,"triangle",.045,.08));const b=s%8;if(b==0||b==3)bt(90,.22,"sine",.35,.004,48);if(b==5)bn(.05,.18,1500)},
+s=>{if(s%4==0)bn(1,.05,500,.7);if(Math.random()<.07){bt(2100,.3,"sine",.07,.003);setTimeout(()=>bt(2100,.3,"sine",.07,.003),160)}if(Math.random()<.04){bt(330,.25,"triangle",.1,.01);setTimeout(()=>bt(415,.3,"triangle",.1,.01),280)}if(s%8==0)bt(80,.25,"sine",.18,.004,46)},
+s=>{const b=s%16;if(b%4==0)bt(210,.12,"sine",.22,.003,150);if(b%4==2)bn(.05,.15,2600);if(s%2==0)bt(NN([330,392,415,494,415,392,330,294],s/2),.5,"triangle",.09,.004)},
+s=>{if(s%8==0){const u=Math.random()<.5;bt(u?400:1400,.55,"sine",.12,.02,u?1500:350)}if(s%2==0)bt(NN([523,659,784,1047,784,659],s/2),.22,"sine",.12,.004);if(s%4==0)bt(98,.2,"triangle",.3,.004)},
+s=>{const b=s%4;bt(95,.2,"sine",.4,.004,50);if(b==2)bn(.06,.3,2200);if(s%2)bn(.03,.12,4000);bt(NN([523,587,659,784,659,587],s/2),.18,"triangle",.07,.01)}];
+function music(on){mOn=on;$("bm").textContent=on?"🎵":"🔇";clearInterval(mT);if(on){bgT=Math.random()*12|0;bgNms=Date.now()+30000+Math.random()*5000;mT=setInterval(()=>{if(Date.now()>bgNms){bgT=(bgT+1+(Math.random()*11|0))%12;bgNms=Date.now()+30000+Math.random()*5000}try{BG2[bgT](bgS++)}catch(e){}},230)}}
+/* ---------- donation board: top 5 + latest donors ---------- */
+async function loadDon(){try{if(api()){const j=await(await fetch(api()+"/donations")).json();DON.top=j.top||[];DON.recent=j.recent||[];DON.total=j.total||0}else{const a=LS2("mela_don",[]);DON.top=aggr(a);DON.recent=a.slice().reverse().slice(0,20);DON.total=a.reduce((s,d)=>s+d.amount,0)}}catch(e){}drawBoard()}
+function drawBoard(){const R0=DON.recent||[],dr=(c,title,sub)=>{const x=c.getContext("2d"),g=x.createLinearGradient(0,0,0,800);g.addColorStop(0,"#0a1a5c");g.addColorStop(1,"#2a1d86");x.fillStyle=g;x.fillRect(0,0,640,800);x.strokeStyle="#ffd43b";x.lineWidth=14;x.strokeRect(7,7,626,786);x.textAlign="center";x.textBaseline="alphabetic";x.fillStyle="#ffd43b";x.font="bold 50px sans-serif";x.fillText(title,320,80);x.fillStyle="#cfe0ff";x.font="24px sans-serif";x.fillText(sub,320,116);return x};
+let x=dr(cvT,"TOP 5 DONORS","Sabse zyada donation");const L=DON.top;
+for(let i=0;i<5;i++){const y=132+i*74,d=L[i];x.fillStyle=i%2?"rgba(255,255,255,.08)":"rgba(255,255,255,.16)";x.fillRect(24,y,592,66);x.textBaseline="middle";x.fillStyle=i<3?["#ffd43b","#d8dde6","#e29a5a"][i]:"#8fb0ff";x.beginPath();x.arc(64,y+33,24,0,6.283);x.fill();x.fillStyle="#0a1a5c";x.font="bold 30px sans-serif";x.textAlign="center";x.fillText(String(i+1),64,y+35);x.textAlign="left";x.fillStyle="#fff";x.font="bold 38px sans-serif";x.fillText(d?String(d.name).slice(0,13):"---",106,y+35);if(d){x.textAlign="right";x.fillStyle="#ffd43b";x.fillText("₹"+d.amount,602,y+35)}}
+x.textBaseline="alphabetic";x.textAlign="center";x.fillStyle="#5be37a";x.font="bold 30px sans-serif";x.fillText("LATEST DONORS",320,534);
+for(let j=0;j<4;j++){const y=548+j*54,d=R0[j];x.fillStyle=j%2?"rgba(255,255,255,.08)":"rgba(255,255,255,.16)";x.fillRect(24,y,592,46);x.textBaseline="middle";x.textAlign="left";x.fillStyle="#fff";x.font="bold 30px sans-serif";x.fillText(d?String(d.name).slice(0,14):"---",40,y+24);if(d){x.textAlign="right";x.fillStyle="#5be37a";x.fillText("₹"+d.amount,602,y+24)}}
+x.textBaseline="alphabetic";x.textAlign="center";x.fillStyle="#ffe8a3";x.font="20px sans-serif";x.fillText("Donate: pole ke paas jao, button dabao",320,786);txT.needsUpdate=true;
+x=dr(cvS,"LATEST DONORS","Naye daani, purane hat jate hain");for(let i=0;i<14;i++){const c=i<7?0:1,r=i%7,px=22+c*312,y=140+r*92,d=R0[4+i];x.fillStyle="rgba(255,255,255,"+(r%2?.08:.16)+")";x.fillRect(px,y,296,82);x.textBaseline="middle";x.textAlign="left";x.fillStyle="#fff";x.font="bold 28px sans-serif";x.fillText(d?String(d.name).slice(0,11):"---",px+12,y+24);x.fillStyle="#5be37a";x.font="bold 28px sans-serif";x.fillText(d?"₹"+d.amount:"",px+12,y+58)}txS.needsUpdate=true}
+function openRew(){$("rewb").innerHTML="<h3>🎯 Missions</h3>"+MS.map((m,i)=>"<div class='it'><b>"+(i<mi?"✅ ":"▫️ ")+m.t+"</b><span>🪙 "+m.r+"</span></div>").join("")+"<h3>🏆 Top 5 Donors</h3>"+(DON.top.slice(0,5).map((d,i)=>"<div class='it'><b>"+(i+1)+". "+esc(d.name)+"</b><span>₹"+d.amount+"</span></div>").join("")||"<p>Abhi koi daani nahi. Pehle donor aap bano!</p>")+"<h3>🕒 Latest Donors</h3>"+((DON.recent||[]).slice(0,8).map(d=>"<div class='it'><b>"+esc(d.name)+"</b><span>₹"+d.amount+"</span></div>").join("")||"<p>-</p>")+"<p style='text-align:center'><button class='gb' onclick=\"cls('rew');lastPole=ALL.find(s=>s.don);openDonate()\">💝 Donate</button></p>";$("rew").style.display="flex"}
+/* ---------- more shops ---------- */
+const NS=[["📚","Kitab Ghar",0x1971c2,"कॉमिक, डायरी, पेंसिल! पढ़ाई भी, मस्ती भी!",[["📕","Comic",60],["📓","Diary",50],["✏️","Pencil Box",40]]],
+["🏺","Matka Mandi",0xc2410c,"मटका ले लो, मटका! गमला भी, दीया भी!",[["🏺","Matka",90],["🪴","Gamla",70]]],
+["📱","Mobile Cover",0x495057,"मोबाइल कवर, ईयरफोन, पावर बैंक! सब सस्ता!",[["📱","Mobile Cover",120],["🎧","Earphone",150],["🔋","Power Bank",300]]],
+["🍉","Fruit Chaat",0x2f9e44,"फ्रूट चाट! तरबूज़, आम, अंगूर, चटपटी फ्रूट चाट!",[["🍉","Fruit Chaat",40],["🥭","Aam",30]]],
+["🥜","Dry Fruit Dukaan",0x8d5524,"बादाम, किशमिश, काजू! ताक़त का खज़ाना!",[["🥜","Badaam",100],["🍇","Kishmish",60]]],
+["🚗","RC Gaadi",0xe03131,"रिमोट वाली गाड़ी! बच्चे बड़े सब ले लो!",[["🚗","RC Car",250],["🚁","RC Helicopter",400]]],
+["🧴","Itr Ghar",0x9c36b5,"इत्र, गुलाब जल! खुशबू से मेला महक उठेगा!",[["🧴","Itr",80],["💐","Gulab Jal",50]]],
+["🧣","Dupatta Corner",0xd6336c,"दुपट्टे, चुनरी, स्टोल! रंग बिरंगे दुपट्टे!",[["🧣","Dupatta",150,"s",0xd6336c],["🧣","Bandhani Dupatta",220,"s",0xfab005]]],
+["⌚","Ghadi Corner",0x212529,"घड़ियाँ ले लो घड़ियाँ! टाइम भी, स्टाइल भी!",[["⌚","Smart Watch",350,"w",0x111111],["⌚","Gold Watch",500,"w",0xffd43b]]],
+["🎮","Game Zone",0x7048e8,"गेम ज़ोन! टोकन ले लो, खेलो और जीतो!",[["🎮","Game Token x5",50],["🕹️","Joystick",200]]],
+["🥛","Lassi Corner",0x15aabf,"ठंडी मलाई वाली लस्सी! कुल्हड़ वाली!",[["🥛","Lassi",35],["🍨","Falooda",55]]],
+["🍡","Chaat Gali",0xf08c00,"दही भल्ले, पापड़ी चाट, टिक्की! चटपटी चाट!",[["🍡","Dahi Bhalla",45],["🥗","Papdi Chaat",40]]]];
+WG["Dupatta"]="f";WG["Bandhani Dupatta"]="f";
+NS.forEach(s=>{const q=place(22,118,18,16);stall(s,q[0],q[1],Math.atan2(-q[0],-q[1])+(rnd()-.5)*.8)});
+
+/* ---------- gold coins to collect ---------- */
+const CPS=[];if(CPS.length>0){(function cp(ms){requestAnimationFrame(cp);if(phase!="play"||PAUSE())return;CPS.forEach((c,i)=>{if(c.t>0){c.t-=.016;if(c.t<=0){const q=place(8,118,0,5);c.g.position.set(q[0],1.5,q[1]);c.g.visible=true}return}c.g.rotation.y=T*3+i;c.g.position.y=1.5+Math.sin(T*3+i)*.25;if(c.g.visible&&Math.hypot(P.position.x-c.g.position.x,P.position.z-c.g.position.z)<1.8){c.g.visible=false;c.t=25;wal+=25;hud();for(let k=0;k<14;k++){const a=Math.random()*6.283;spark(c.g.position.x,1.5,c.g.position.z,Math.cos(a)*3,2+Math.random()*3,Math.sin(a)*3,0xffd43b,.7)}sfx("coin");track("coin")}}})})()}
+MS.push({t:"Lucky Spin ghumao 🎰",k:"spin",n:1,r:150});
+const _t4=track;track=(ev,d)=>{_t4(ev,d);if(ev=="coin"){MC.coin=(MC.coin||0)+1;mCheck()}if(ev=="spin"){MC.spin=1;mCheck()}};
+/* ---------- lucky spin ---------- */
+const SPR=[100,50,200,1000,0,500,300,2000];
+function openSpin(){const t=LS2("mela_spin",0),left=t+10800000-Date.now();$("whl").innerHTML=SPR.map((v,i)=>"<span class='wl' style='transform:rotate("+(i*45+22.5)+"deg) translateY(-84px)'>"+(v||"X")+"</span>").join("");$("whl").style.transition="none";$("whl").style.transform="rotate(0deg)";$("spr").textContent=left>0?"Agla free spin: "+Math.ceil(left/60000)+" minute me":"Free spin ready!";$("spb").disabled=left>0;$("spn").style.display="flex"}
+function doSpin(){if(spinning)return;spinning=true;$("spb").disabled=true;const idx=[0,0,1,1,2,2,5,6,7,3,4][Math.random()*11|0],w=$("whl");void w.offsetWidth;w.style.transition="transform 4s cubic-bezier(.1,.7,.2,1)";w.style.transform="rotate("+(360*5+360-(idx*45+22.5))+"deg)";let k=0;const iv=setInterval(()=>{tone(700+(k++%4)*120,.05,"sine",.1)},130);
+setTimeout(()=>{clearInterval(iv);spinning=false;const v=SPR[idx];SV("mela_spin",Date.now());if(v){wal+=v;hud();sfx("coin");$("spr").textContent="🎉 ₹"+v+" jeete!";toast("🎰 ₹"+v+" mil gaye!")}else{sfx("lose");$("spr").textContent="Is baar kuch nahi 😅"}track("spin")},4200)}
+/* ===== v9: FunnyMela polish: quiet toasts, square menu panel ===== */
+var QUIET=/^(Level:|Walk|🏃 Run|🏃 Daudo|😮|✅ Run|Voice:|📷|👁️|🦅|Dost Chintu mela se chala gaya|Daud rahe|✔ )/;
+function toast(t){if(QUIET&&QUIET.test(t))return;const e=$("toast");e.textContent=t;e.style.display="block";clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display="none",1800)}
+const MC2=[["🏪","Shop","#ffb347","#e8590c","closeMnu();openShop2()"],["🏆","Rewards","#b57cff","#6a2fd0","closeMnu();openRew()"],["🗺️","Map","#5be37a","#17913a","closeMnu();openMap()"],["🎁","Daily Reward","#ff8fb1","#d6336c","closeMnu();openDly()","dly"],["⭐","Special Offer","#ff6b6b","#c92a2a","closeMnu();openStore()","off"],["👑","VIP","#ffe36a","#e0a100","closeMnu();openStore()"],["🎰","Lucky Spin","#4dd9e0","#0b8aa0","closeMnu();openSpin()"],["🎵","Music","#6bb2ff","#2234b0","$('bm').click();renderMnu()","mus"],["🔊","Voice","#6bb2ff","#2234b0","$('bv').click();renderMnu()","vo"],["👥","Friends","#9fa8ff","#4d4dd0","$('bf').click();renderMnu()","fr"],["🎁","Free ₹500","#ff9966","#e03131","closeMnu();$('br').click()"],["⚙️","Settings","#adb5bd","#495057","closeMnu();openDrw()"]];
+function renderMnu(){$("mav").textContent=$("pav").textContent;$("mnm").textContent=$("pnm").textContent;$("mlv").textContent=$("plv").textContent;$("mxp").style.width=$("xpf").style.width||"0%";$("mcn").textContent=wal;
+$("mnug").innerHTML=MC2.map(t=>{let pill="";if(t[5]=="mus")pill=mOn?"ON":"OFF";if(t[5]=="vo")pill=VL?"ON":"OFF";if(t[5]=="fr")pill=friends;if(t[5]=="off")pill=$("otm").textContent;if(t[5]=="dly"&&!drState().claimed)pill="NEW";return"<button class='mt' style='--c1:"+t[2]+";--c2:"+t[3]+"' onclick=\""+t[4]+"\"><span class='ic'>"+t[0]+"</span><b>"+t[1]+"</b>"+(pill!==""?"<em>"+pill+"</em>":"")+"</button>"}).join("")}
+/* ===== v10: working shows - Jadu Show (hat game), Kushti (tap battle), Nautanki (play + clap) ===== */
+let MGS=null,KS=null;
+function magicShow(){MGS={r:0,sc:0,busy:true,slots:[0,1,2],coin:1};const s=$("scn");s.innerHTML='<div class="mgbg"></div><div class="cl" onclick="endScene()">✖</div><div class="stt">🎩 Jadu Show<br><small id="mgs">Dekho... jaadugar ke haath khaali hain!</small></div><div class="mgm">🧙‍♂️</div><div id="bird">🕊️</div><div id="cups" class="nc"></div>';s.style.display="block";say("जादू जादू! खाली टोपी से कबूतर निकालूंगा!",1.4);
+[784,988,1175,1568].forEach((f,i)=>setTimeout(()=>tone(f,.4,"sine",.09),i*150));setTimeout(()=>{const b=$("bird");if(b){b.classList.add("fly");sfx("whoosh")}},900);setTimeout(mgRound,2800)}
+function mgRound(){const c=$("cups");if(!c||!MGS)return;const m=MGS;if(m.r>=3){endScene();toast("🎩 Jadu show khatam! Inaam ₹"+m.sc);return}m.coin=Math.random()*3|0;m.slots=[0,1,2];m.busy=true;$("mgs").textContent="Round "+(m.r+1)+"/3 - sikka dekho!";
+c.innerHTML=[0,1,2].map(i=>"<div class='cup nc' id='cup"+i+"' style='left:"+i*33+"%' onclick='mgPick("+i+")'><span class='ch'>🎩</span><span class='cn'>"+(i==m.coin?"🪙":"")+"</span></div>").join("");
+setTimeout(()=>{const e=$("cup"+m.coin);if(e)e.classList.add("up")},300);setTimeout(()=>{const e=$("cup"+m.coin);if(e)e.classList.remove("up");const g=$("mgs");if(g)g.textContent="Dhyan se dekho..."},1500);
+let n=0;const iv=setInterval(()=>{if(!$("cups")||!$("cup0")){clearInterval(iv);return}const a=Math.random()*3|0,b=(a+1+(Math.random()*2|0))%3,sa=m.slots[a];m.slots[a]=m.slots[b];m.slots[b]=sa;$("cup"+a).style.left=m.slots[a]*33+"%";$("cup"+b).style.left=m.slots[b]*33+"%";tone(300+n*30,.1,"sine",.1);if(++n>=8){clearInterval(iv);m.busy=false;const g=$("mgs");if(g)g.textContent="Sikka kis topi ke neeche hai? Tap karo!"}},1700/3)}
+function mgPick(i){const m=MGS;if(!m||m.busy)return;m.busy=true;$("cup"+i).classList.add("up");$("cup"+m.coin).classList.add("up");if(i==m.coin){m.sc+=100;wal+=100;hud();sfx("coin");say("वाह! सही पकड़ा!",1.4);$("mgs").textContent="Sahi! +₹100"}else{sfx("lose");say("अरे! गलत टोपी!",1.4);$("mgs").textContent="Galat! Sikka yahan tha"}m.r++;setTimeout(mgRound,1800)}
+function kushti(){KS={m:50,t:0,on:true};const s=$("scn");s.innerHTML='<div class="kbg"></div><div class="cl" onclick="endScene()">✖</div><div class="stt">🤼 Kushti Akhara<br><small id="kst">Zor lagao! Tap tap tap!</small></div><div class="kbar"><i id="kfill"></i></div><div class="kw" id="kw1">🤼</div><div class="kvs">VS</div><div class="kw k2" id="kw2">💪</div><button class="gb big nc" id="ktap" onclick="ktap()">ZOR LAGAO!</button>';s.style.display="block";say("कुश्ती शुरू! पहलवान को चित करो!",1.3);
+const dif=[5,7.5,10][DIF];KS.iv=setInterval(()=>{const k=KS;if(!k||!k.on||!$("kfill")){clearInterval(k&&k.iv);return}k.t+=.1;k.m-=dif*.1+Math.random()*.6;if(k.m<=0)kEnd(false);else if(k.m>=100)kEnd(true);else if(k.t>12)kEnd(k.m>50);kDraw()},100);kDraw()}
+function ktap(){if(!KS||!KS.on)return;KS.m=Math.min(100,KS.m+4.5);tone(180+Math.random()*60,.06,"triangle",.15);noise(.04,.08,600);kDraw()}
+function kDraw(){const k=KS;if(!k||!$("kfill"))return;$("kfill").style.width=k.m+"%";const o=(k.m-50)*.9;$("kw1").style.transform="translateX("+o+"px) rotate("+Math.sin(k.t*14)*6+"deg)";$("kw2").style.transform="translateX("+o+"px) rotate("+(-Math.sin(k.t*14)*6)+"deg)"}
+function kEnd(win){const k=KS;if(!k||!k.on)return;k.on=false;clearInterval(k.iv);if(win){wal+=150;hud();sfx("coin");say("शाबाश पहलवान! जीत गए!",1.3);$("kst").textContent="Jeet gaye! +₹150"}else{sfx("lose");say("अरे! पहलवान ने पटक दिया!",1.4);$("kst").textContent="Haar gaye! Phir koshish karo"}setTimeout(()=>{if($("kst"))endScene()},2200)}
+function nautanki(){const s=$("scn"),L=[["🤴","Raja","मंत्री जी, मेला कितना बड़ा है?",.8],["👨‍💼","Mantri","महाराज, इतना कि मम्मी पापा भी ढूंढते रह जाएं!",1.1],["🤡","Joker","और बेटा चुपके से गोलगप्पे खा रहा है!",1.5],["👸","Rani","राजा जी, पटाखे बाहर ही जलाना!",1.5],["🤴","Raja","शाबाश! नौटंकी खत्म, अब ताली बजाओ!",.9]];
+s.innerHTML='<div class="nbg"></div><div class="cl" onclick="endScene()">✖</div><div class="stt">🎭 Nautanki Manch</div><div class="nch" id="nch">🎭</div><div class="nsp" id="nsp">Parda utha...</div>';s.style.display="block";let i=0;
+const step=()=>{if(!$("nch"))return;if(i>=L.length){nEnd();return}const l=L[i++];$("nch").textContent=l[0];$("nsp").innerHTML="<b>"+l[1]+":</b> "+l[2];say(l[2],l[3]);tone(330+i*40,.2,"triangle",.1);scT=setTimeout(step,3600)};scT=setTimeout(step,700)}
+function nEnd(){const s=$("scn");let c=0;$("nch").textContent="👏";$("nsp").textContent="Taali bajao! 5 baar tap karo, 6 second me!";const b=document.createElement("button");b.className="gb big nc";b.textContent="👏 TAALI";b.style.cssText="position:absolute;left:50%;bottom:16%;transform:translateX(-50%)";
+b.onclick=()=>{c++;noise(.08,.2,1800);tone(1200,.04,"sine",.1);b.textContent="👏 "+c;if(c==5){clearTimeout(scT);wal+=60;hud();sfx("coin");say("वाह वाह! तालियाँ!",1.4);toast("🎭 Taaliyon ka inaam ₹60");setTimeout(endScene,1200)}};s.appendChild(b);scT=setTimeout(endScene,7000)}
+</script></body></html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html><html lang="hi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FunnyMela Admin</title>
+<style>
+:root{--bg:#fff8e6;--tx:#3a1f0b;--ac:#e8590c}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1d1030;--tx:#ffeccc;--ac:#ff922b}}
+:root[data-theme="dark"]{--bg:#1d1030;--tx:#ffeccc;--ac:#ff922b}
+body{margin:0;padding:16px;background:var(--bg);color:var(--tx);font-family:system-ui,sans-serif}
+input,button{font-size:15px;padding:8px;border-radius:8px;border:1px solid #888;margin:3px}button{background:var(--ac);color:#fff;border:0;font-weight:700}
+.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.card{background:rgba(128,128,128,.18);border-radius:12px;padding:10px;text-align:center}.card b{display:block;font-size:24px;color:var(--ac)}
+table{width:100%;border-collapse:collapse;font-size:13px;overflow-x:auto}td,th{padding:5px;border-bottom:1px solid rgba(128,128,128,.3);text-align:left}
+</style></head><body>
+<h1>🛠️ FunnyMela Admin</h1>
+<div id="login"><input id="id" placeholder="demotionguy@gmail.com" value="demotionguy@gmail.com" style="width:230px" onkeydown="if(event.key==='Enter')go()"><input id="pw" type="password" placeholder="Password" style="width:160px" onkeydown="if(event.key==='Enter')go()"><button onclick="go()">Login</button></div>
+<div id="out"></div>
+<script>
+const API = (window.location.protocol === "file:" || window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") ? "http://localhost:3000" : "https://YOUR-API.com"; /* Replace with your deployed backend URL for production */
+let tok="";const $=i=>document.getElementById(i),esc=s=>String(s).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
+async function go(){try{const idVal=$("id").value.trim(),pwVal=$("pw").value.trim();if(!idVal||!pwVal)return alert("ID aur Password dono dalein");const r=await fetch(API+"/admin/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id:idVal,password:pwVal})}),j=await r.json();if(!j.ok)return alert("ID ya password galat: "+(j.error||"Invalid credentials"));tok=j.token;$("pw").value="";$("login").style.display="none";load()}catch(e){alert("Server se connect nahi hua. Backend chalu hai ya nahi check karein.")}}
+async function load(){const r=await fetch(API+"/admin/events",{headers:{Authorization:"Bearer "+tok}});if(r.status==401){location.reload();return}const d=await r.json(),ev=d.events,f=n=>ev.filter(e=>e.ev==n);
+const top=(a,k,v)=>{const m={};a.forEach(e=>{const x=e[k]||"-";m[x]=(m[x]||0)+(v?+e[v]||0:1)});return Object.entries(m).sort((x,y)=>y[1]-x[1]).slice(0,8)},
+tb=(r,h)=>"<table><tr><th>"+h[0]+"</th><th>"+h[1]+"</th></tr>"+(r.map(x=>"<tr><td>"+esc(x[0])+"</td><td>"+esc(x[1])+"</td></tr>").join("")||"<tr><td colspan=2>Abhi data nahi</td></tr>")+"</table>",
+card=(n,v)=>"<div class='card'><b>"+v+"</b>"+n+"</div>",buys=f("buy"),rd=f("ride"),act=ev.filter(e=>e.ev=="buy"||e.ev=="ride"),money=d.paid.reduce((s,o)=>s+o.amount,0);
+$("out").innerHTML="<div class='cards'>"+card("Visitors",new Set(ev.map(e=>e.sid)).size)+card("Game khele",f("play").length)+card("Asli kamai ₹",money)+card("Store sales",d.paid.length)+card("Pakde gaye",f("caught").length)+card("Feedback",f("feedback").length)+card("Ad views",f("ad_view").length)+card("Patake jale",f("burn").length)+"</div>"+
+"<h2>🏆 Sabse active players</h2>"+tb(top(act,"name"),["Naam","Actions"])+"<h2>💰 Sabse jyada kharch (game coins)</h2>"+tb(top(buys.concat(rd),"name","price"),["Naam","₹"])+"<h2>🛒 Top items</h2>"+tb(top(buys,"item"),["Item","Bika"])+"<h2>🛍️ Store (asli paise)</h2>"+tb(top(d.paid,"item"),["Item","Sales"])+"<h2>🎡 Top jhoole</h2>"+tb(top(rd,"item"),["Jhoola","Rides"])+"<h2>💬 Feedback</h2>"+tb(f("feedback").slice(0,15).map(e=>[(e.name||"")+": "+(e.item||""),new Date(e.ts).toLocaleDateString()]),["Feedback","Date"])+"<p><button onclick='load()'>🔄 Refresh</button></p>"}
+</script></body></html>

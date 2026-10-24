@@ -1,0 +1,28 @@
+# One-click deploy on Render (render.com): New > Blueprint > connect this repo.
+services:
+  - type: web
+    name: funnymela-api
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - { key: RZP_KEY_ID, sync: false }
+      - { key: RZP_KEY_SECRET, sync: false }
+      - { key: RZP_WEBHOOK_SECRET, sync: false }
+      - { key: SUPABASE_URL, sync: false }
+      - { key: SUPABASE_SERVICE_KEY, sync: false }
+      - { key: SITE_ORIGIN, sync: false }
+      - { key: ADMIN_ID, sync: false }
+      - { key: ADMIN_PASS_SALT, sync: false }
+      - { key: ADMIN_PASS_HASH, sync: false }
+      - { key: ADMIN_TOKEN_SECRET, sync: false }
+  - type: web
+    name: funnymela-game
+    runtime: static
+    staticPublishPath: frontend
+  - type: web
+    name: funnymela-admin
+    runtime: static
+    staticPublishPath: admin
