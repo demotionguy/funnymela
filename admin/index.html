@@ -13,7 +13,7 @@ table{width:100%;border-collapse:collapse;font-size:13px;overflow-x:auto}td,th{p
 <div id="login"><input id="id" placeholder="demotionguy@gmail.com" value="demotionguy@gmail.com" style="width:230px" onkeydown="if(event.key==='Enter')go()"><input id="pw" type="password" placeholder="Password" style="width:160px" onkeydown="if(event.key==='Enter')go()"><button onclick="go()">Login</button></div>
 <div id="out"></div>
 <script>
-const API = (window.location.protocol === "file:" || window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") ? "http://localhost:3000" : "https://YOUR-API.com"; /* Replace with your deployed backend URL for production */
+const API = (window.location.protocol === "file:") ? "http://localhost:3000" : window.location.origin;
 let tok="";const $=i=>document.getElementById(i),esc=s=>String(s).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
 async function go(){try{const idVal=$("id").value.trim(),pwVal=$("pw").value.trim();if(!idVal||!pwVal)return alert("ID aur Password dono dalein");const r=await fetch(API+"/admin/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id:idVal,password:pwVal})}),j=await r.json();if(!j.ok)return alert("ID ya password galat: "+(j.error||"Invalid credentials"));tok=j.token;$("pw").value="";$("login").style.display="none";load()}catch(e){alert("Server se connect nahi hua. Backend chalu hai ya nahi check karein.")}}
 async function load(){const r=await fetch(API+"/admin/events",{headers:{Authorization:"Bearer "+tok}});if(r.status==401){location.reload();return}const d=await r.json(),ev=d.events,f=n=>ev.filter(e=>e.ev==n);

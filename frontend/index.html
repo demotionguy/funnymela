@@ -261,7 +261,7 @@ body.intro #mm,body.intro #ms,body.intro #acts,body.intro #mnuBtn,body.intro #co
 <div class="ov" id="ck"><div class="bx" id="ckbox"></div></div>
 <div class="ov" id="over" style="z-index:30"><div class="bx"><div style="font-size:60px">😭</div><h2>Pitai ho gayi! GAME OVER</h2><p>Mummy-Papa ne pakad liya. Ghar chalo beta!</p><button class="b" onclick="location.reload()">🔁 Fir se khelo</button></div></div>
 <div id="warn"></div><button class="b" id="bn">🎇 Patake jalao</button>
-<script>/* Backend config: Set your deployed backend URL here. Auto-detects http://localhost:3000 when running locally or from local file. */window.MELA_API=window.MELA_API||(location.protocol==="file:"||location.hostname==="localhost"||location.hostname==="127.0.0.1"?"http://localhost:3000":"");window.MELA_ENDPOINT=window.MELA_ENDPOINT||(window.MELA_API?window.MELA_API+"/event":"");</script>
+<script>/* Backend config: Auto-detects server origin or http://localhost:3000 when running from local file */window.MELA_API=window.MELA_API||(location.protocol==="file:"?"http://localhost:3000":location.origin);window.MELA_ENDPOINT=window.MELA_ENDPOINT||(window.MELA_API?window.MELA_API+"/event":"");</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 const $=i=>document.getElementById(i),V=THREE.Vector3;
@@ -972,7 +972,7 @@ WG["Dupatta"]="f";WG["Bandhani Dupatta"]="f";
 NS.forEach(s=>{const q=place(22,118,18,16);stall(s,q[0],q[1],Math.atan2(-q[0],-q[1])+(rnd()-.5)*.8)});
 
 /* ---------- gold coins to collect ---------- */
-const CPS=[];if(CPS.length>0){(function cp(ms){requestAnimationFrame(cp);if(phase!="play"||PAUSE())return;CPS.forEach((c,i)=>{if(c.t>0){c.t-=.016;if(c.t<=0){const q=place(8,118,0,5);c.g.position.set(q[0],1.5,q[1]);c.g.visible=true}return}c.g.rotation.y=T*3+i;c.g.position.y=1.5+Math.sin(T*3+i)*.25;if(c.g.visible&&Math.hypot(P.position.x-c.g.position.x,P.position.z-c.g.position.z)<1.8){c.g.visible=false;c.t=25;wal+=25;hud();for(let k=0;k<14;k++){const a=Math.random()*6.283;spark(c.g.position.x,1.5,c.g.position.z,Math.cos(a)*3,2+Math.random()*3,Math.sin(a)*3,0xffd43b,.7)}sfx("coin");track("coin")}}})})()}
+const CPS=[];
 MS.push({t:"Lucky Spin ghumao 🎰",k:"spin",n:1,r:150});
 const _t4=track;track=(ev,d)=>{_t4(ev,d);if(ev=="coin"){MC.coin=(MC.coin||0)+1;mCheck()}if(ev=="spin"){MC.spin=1;mCheck()}};
 /* ---------- lucky spin ---------- */
